@@ -1,0 +1,717 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/root/json-type/implicit/sell-bitcoin": {
+      "post": {
+        "tags": [
+          "Json-type request body"
+        ],
+        "description": "Sell your bitcoin",
+        "operationId": "sellBitcoinImplicit",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ImplicitTypeAmountRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ImplicitTypePercentageRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ImplicitTypeValueRequest"
+                  }
+                ]
+              },
+              "examples": {
+                "Percentage": {
+                  "description": "Percentage",
+                  "value": {
+                    "percentage": 100
+                  }
+                },
+                "Value": {
+                  "description": "Value",
+                  "value": {
+                    "value": 1337
+                  }
+                },
+                "Amount": {
+                  "description": "Amount",
+                  "value": {
+                    "amount": {
+                      "value": 1.1,
+                      "currency": "SEK"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/SealedInterfaceAmountResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/SealedInterfacePercentageResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/SealedInterfaceValueResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/root/json-type/explicit/sell-bitcoin": {
+      "post": {
+        "tags": [
+          "Json-type request body"
+        ],
+        "description": "Sell your bitcoin",
+        "operationId": "sellBitcoinExplicit",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ExplicitTypeAmountRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ExplicitTypePercentageRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ExplicitTypeValueRequest"
+                  }
+                ]
+              },
+              "examples": {
+                "Percentage": {
+                  "description": "Percentage",
+                  "value": {
+                    "transferType": "PERCENTAGE",
+                    "percentage": 100
+                  }
+                },
+                "Value": {
+                  "description": "Value",
+                  "value": {
+                    "transferType": "VALUE",
+                    "value": 1337
+                  }
+                },
+                "Amount": {
+                  "description": "Amount",
+                  "value": {
+                    "transferType": "AMOUNT",
+                    "amount": {
+                      "value": 1.1,
+                      "currency": "SEK"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/SealedInterfaceAmountResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/SealedInterfacePercentageResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/SealedInterfaceValueResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/root/flattened/sell-bitcoin": {
+      "post": {
+        "tags": [
+          "Flat request body"
+        ],
+        "description": "Sell your bitcoin",
+        "operationId": "sellBitcoin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SellBitcoinRequest"
+              },
+              "examples": {
+                "Percentage": {
+                  "description": "Percentage",
+                  "value": {
+                    "percentage": 100
+                  }
+                },
+                "Value": {
+                  "description": "Value",
+                  "value": {
+                    "value": 1337
+                  }
+                },
+                "Amount": {
+                  "description": "Amount",
+                  "value": {
+                    "amount": {
+                      "value": 1.1,
+                      "currency": "SEK"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SellBitcoinResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/root/discriminated/sell-bitcoin": {
+      "post": {
+        "tags": [
+          "Discriminated request body"
+        ],
+        "description": "Sell your bitcoin",
+        "operationId": "sellBitcoinDiscriminated",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SealedClassSellBitcoinRequest"
+              },
+              "examples": {
+                "Percentage": {
+                  "description": "Percentage",
+                  "value": {
+                    "transferType": "PERCENTAGE",
+                    "percentage": 100
+                  }
+                },
+                "Value": {
+                  "description": "Value",
+                  "value": {
+                    "transferType": "VALUE",
+                    "value": 1337
+                  }
+                },
+                "Amount": {
+                  "description": "Amount",
+                  "value": {
+                    "transferType": "AMOUNT",
+                    "amount": {
+                      "value": 1.1,
+                      "currency": "SEK"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SealedClassSellBitcoinResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Amount": {
+        "required": [
+          "currency",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "example": 1.1
+          },
+          "currency": {
+            "type": "string",
+            "format": "ISO 4217",
+            "example": "SEK"
+          }
+        },
+        "description": "The amount to sell"
+      },
+      "ImplicitTypeAmountRequest": {
+        "required": [
+          "amount"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ImplicitTypeSellBitcoinRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "$ref": "#/components/schemas/Amount"
+              }
+            }
+          }
+        ]
+      },
+      "ImplicitTypePercentageRequest": {
+        "required": [
+          "percentage"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ImplicitTypeSellBitcoinRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "percentage": {
+                "type": "number",
+                "description": "The percentage to sell",
+                "example": 100
+              }
+            }
+          }
+        ]
+      },
+      "ImplicitTypeSellBitcoinRequest": {
+        "type": "object"
+      },
+      "ImplicitTypeValueRequest": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ImplicitTypeSellBitcoinRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            }
+          }
+        ]
+      },
+      "SealedInterfaceAmountResponse": {
+        "required": [
+          "amount"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SealedInterfaceSellBitcoinResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "$ref": "#/components/schemas/Amount"
+              }
+            }
+          }
+        ]
+      },
+      "SealedInterfacePercentageResponse": {
+        "required": [
+          "percentage"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SealedInterfaceSellBitcoinResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "percentage": {
+                "type": "number",
+                "description": "The percentage to sell",
+                "example": 100
+              }
+            }
+          }
+        ]
+      },
+      "SealedInterfaceSellBitcoinResponse": {
+        "required": [
+          "transferType"
+        ],
+        "type": "object",
+        "properties": {
+          "transferType": {
+            "type": "string"
+          }
+        },
+        "discriminator": {
+          "propertyName": "transferType"
+        }
+      },
+      "SealedInterfaceValueResponse": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SealedInterfaceSellBitcoinResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number",
+                "description": "The value to sell",
+                "example": 1.1
+              }
+            }
+          }
+        ]
+      },
+      "ExplicitTypeAmountRequest": {
+        "required": [
+          "amount"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ExplicitTypeSellBitcoinRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "$ref": "#/components/schemas/Amount"
+              }
+            }
+          }
+        ]
+      },
+      "ExplicitTypePercentageRequest": {
+        "required": [
+          "percentage"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ExplicitTypeSellBitcoinRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "percentage": {
+                "type": "number",
+                "description": "The percentage to sell",
+                "example": 100
+              }
+            }
+          }
+        ]
+      },
+      "ExplicitTypeSellBitcoinRequest": {
+        "required": [
+          "transferType"
+        ],
+        "type": "object",
+        "properties": {
+          "transferType": {
+            "type": "string"
+          }
+        },
+        "discriminator": {
+          "propertyName": "transferType"
+        }
+      },
+      "ExplicitTypeValueRequest": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ExplicitTypeSellBitcoinRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            }
+          }
+        ]
+      },
+      "SellBitcoinRequest": {
+        "type": "object",
+        "properties": {
+          "percentage": {
+            "type": "number",
+            "description": "Mutually exclusive with value and amount"
+          },
+          "value": {
+            "type": "number",
+            "description": "Mutually exclusive with percentage and amount"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/Amount"
+          }
+        },
+        "description": "The quantity of Bitcoin to sell. Can either be a percentage, a value (number of bitcoins) or an amount (the value to sell given in another currency)."
+      },
+      "SellBitcoinResponse": {
+        "required": [
+          "amount",
+          "percentage",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "percentage": {
+            "type": "number",
+            "description": "Mutually exclusive with value and amount"
+          },
+          "value": {
+            "type": "number",
+            "description": "Mutually exclusive with percentage and amount"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/Amount"
+          }
+        },
+        "description": "The quantity of Bitcoin to sell. Can either be a percentage, a value (number of bitcoins) or an amount (the value to sell given in another currency)."
+      },
+      "SealedClassSellAmountRequest": {
+        "required": [
+          "amount",
+          "transferType"
+        ],
+        "type": "object",
+        "properties": {
+          "transferType": {
+            "$ref": "#/components/schemas/TransferType"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/Amount"
+          }
+        }
+      },
+      "SealedClassSellBitcoinRequest": {
+        "required": [
+          "transferType"
+        ],
+        "type": "object",
+        "properties": {
+          "transferType": {
+            "$ref": "#/components/schemas/TransferType"
+          }
+        },
+        "discriminator": {
+          "propertyName": "transferType",
+          "mapping": {
+            "PERCENTAGE": "#/components/schemas/SealedClassSellPercentageRequest",
+            "VALUE": "#/components/schemas/SealedClassSellValueRequest",
+            "AMOUNT": "#/components/schemas/SealedClassSellAmountRequest"
+          }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SealedClassSellPercentageRequest"
+          },
+          {
+            "$ref": "#/components/schemas/SealedClassSellValueRequest"
+          },
+          {
+            "$ref": "#/components/schemas/SealedClassSellAmountRequest"
+          }
+        ]
+      },
+      "SealedClassSellPercentageRequest": {
+        "required": [
+          "percentage",
+          "transferType"
+        ],
+        "type": "object",
+        "properties": {
+          "transferType": {
+            "$ref": "#/components/schemas/TransferType"
+          },
+          "percentage": {
+            "type": "number",
+            "description": "The percentage to sell",
+            "example": 100
+          }
+        }
+      },
+      "SealedClassSellValueRequest": {
+        "required": [
+          "transferType",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "transferType": {
+            "$ref": "#/components/schemas/TransferType"
+          },
+          "value": {
+            "type": "number",
+            "description": "The value to sell",
+            "example": 1.1
+          }
+        }
+      },
+      "TransferType": {
+        "type": "string",
+        "description": "description",
+        "example": "PERCENTAGE",
+        "enum": [
+          "PERCENTAGE",
+          "AMOUNT",
+          "VALUE"
+        ]
+      },
+      "SealedClassAmountResponse": {
+        "required": [
+          "amount",
+          "transferType"
+        ],
+        "type": "object",
+        "properties": {
+          "transferType": {
+            "$ref": "#/components/schemas/TransferType"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/Amount"
+          }
+        }
+      },
+      "SealedClassPercentageResponse": {
+        "required": [
+          "percentage",
+          "transferType"
+        ],
+        "type": "object",
+        "properties": {
+          "transferType": {
+            "$ref": "#/components/schemas/TransferType"
+          },
+          "percentage": {
+            "type": "number",
+            "description": "The percentage to sell",
+            "example": 100
+          }
+        }
+      },
+      "SealedClassSellBitcoinResponse": {
+        "required": [
+          "transferType"
+        ],
+        "type": "object",
+        "properties": {
+          "transferType": {
+            "$ref": "#/components/schemas/TransferType"
+          }
+        },
+        "discriminator": {
+          "propertyName": "transferType",
+          "mapping": {
+            "AMOUNT": "#/components/schemas/SealedClassAmountResponse",
+            "PERCENTAGE": "#/components/schemas/SealedClassPercentageResponse",
+            "VALUE": "#/components/schemas/SealedClassValueResponse"
+          }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SealedClassAmountResponse"
+          },
+          {
+            "$ref": "#/components/schemas/SealedClassPercentageResponse"
+          },
+          {
+            "$ref": "#/components/schemas/SealedClassValueResponse"
+          }
+        ]
+      },
+      "SealedClassValueResponse": {
+        "required": [
+          "transferType",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "transferType": {
+            "$ref": "#/components/schemas/TransferType"
+          },
+          "value": {
+            "type": "number",
+            "description": "The value to sell",
+            "example": 1.1
+          }
+        }
+      }
+    }
+  }
+}
