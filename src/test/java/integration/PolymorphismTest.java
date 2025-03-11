@@ -1,10 +1,15 @@
 package integration;
 
 import api.model.Amount;
+import api.model.TransferType;
+import api.model.jsonType.explicit.type.request.ExplicitTypeAmountRequest;
+import api.model.jsonType.explicit.type.request.ExplicitTypeSellBitcoinRequest;
 import api.model.jsonType.response.SealedInterfaceAmountResponse;
 import api.model.jsonType.response.SealedInterfacePercentageResponse;
 import api.model.jsonType.response.SealedInterfaceSellBitcoinResponse;
 import api.model.jsonType.response.SealedInterfaceValueResponse;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -26,8 +31,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = Main.class,
-        properties = {"spring.profiles.active=server"}
+        properties = {"spring.profiles.active=client"}
 )
+@WireMockTest(httpPort = 8080)
 public class PolymorphismTest {
 
     private static final String CONTENT_TYPE = "Content-Type";
@@ -69,8 +75,11 @@ public class PolymorphismTest {
     }
 
     private SealedInterfaceSellBitcoinResponse when_calling_endpoint() {
+        ExplicitTypeSellBitcoinRequest request = new ExplicitTypeAmountRequest(
+                new Amount(BigDecimal.valueOf(10), "SEK")
+        );
         return restTemplate.exchange(
-                new RequestEntity<>(HttpMethod.POST, URI.create(BASE_PATH + port + "/json-type/explicit/sell-bitcoin")),
+                new RequestEntity<>(request, HttpMethod.POST, URI.create(BASE_PATH + port + "/json-type/explicit/sell-bitcoin")),
                 SealedInterfaceSellBitcoinResponse.class
         ).getBody();
     }
@@ -79,6 +88,7 @@ public class PolymorphismTest {
         return Stream.of(
                 Arguments.of(EXPECTED_AMOUNT_RESPONSE, """
                         {
+                            type: AMOUNT,
                             "amount" : {
                                 "value": 10,
                                 "currency" : "SEK"
@@ -86,10 +96,12 @@ public class PolymorphismTest {
                         }"""),
                 Arguments.of(EXPECTED_PERCENTAGE_RESPONSE, """
                         {
+                            type: PERCENTAGE,
                             "percentage" : 69
                         }"""),
                 Arguments.of(EXPECTED_VALUE_RESPONSE, """
                         {
+                            type: VALUE,
                             "value" : 10
                         }""")
         );

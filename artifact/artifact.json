@@ -92,6 +92,34 @@
         ],
         "description": "Sell your bitcoin",
         "operationId": "sellBitcoinExplicit",
+        "parameters": [
+          {
+            "name": "schema",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Sort"
+              }
+            }
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "required": false,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Sort"
+                  }
+                }
+              }
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -112,21 +140,21 @@
                 "Percentage": {
                   "description": "Percentage",
                   "value": {
-                    "transferType": "PERCENTAGE",
+                    "type": "PERCENTAGE",
                     "percentage": 100
                   }
                 },
                 "Value": {
                   "description": "Value",
                   "value": {
-                    "transferType": "VALUE",
+                    "type": "VALUE",
                     "value": 1337
                   }
                 },
                 "Amount": {
                   "description": "Amount",
                   "value": {
-                    "transferType": "AMOUNT",
+                    "type": "AMOUNT",
                     "amount": {
                       "value": 1.1,
                       "currency": "SEK"
@@ -233,21 +261,21 @@
                 "Percentage": {
                   "description": "Percentage",
                   "value": {
-                    "transferType": "PERCENTAGE",
+                    "type": "PERCENTAGE",
                     "percentage": 100
                   }
                 },
                 "Value": {
                   "description": "Value",
                   "value": {
-                    "transferType": "VALUE",
+                    "type": "VALUE",
                     "value": 1337
                   }
                 },
                 "Amount": {
                   "description": "Amount",
                   "value": {
-                    "transferType": "AMOUNT",
+                    "type": "AMOUNT",
                     "amount": {
                       "value": 1.1,
                       "currency": "SEK"
@@ -272,6 +300,103 @@
           }
         }
       }
+    },
+    "/root/v3/analyses": {
+      "get": {
+        "tags": [
+          "Analyses"
+        ],
+        "description": "Get analyses",
+        "operationId": "getAnalysesV3",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Analysis"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/root/v2/analyses": {
+      "get": {
+        "tags": [
+          "Analyses"
+        ],
+        "description": "Get analyses",
+        "operationId": "getAnalysesV2",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Analysis"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/root/json-annotation-schema-one-of": {
+      "get": {
+        "tags": [
+          "DoubleAnnotations"
+        ],
+        "description": "jsonAnnotationAndSchemaOneOf",
+        "operationId": "jsonAnnotationAndSchemaOneOf",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Child1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Child2"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/root/analyses": {
+      "get": {
+        "tags": [
+          "Analyses"
+        ],
+        "description": "Get analyses",
+        "operationId": "getAnalyses",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Analyses"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -288,12 +413,12 @@
             "example": 1.1
           },
           "currency": {
+            "pattern": "^S[a-z]K$",
             "type": "string",
-            "format": "ISO 4217",
-            "example": "SEK"
+            "format": "ISO 4217"
           }
         },
-        "description": "The amount to sell"
+        "description": "An amount"
       },
       "ImplicitTypeAmountRequest": {
         "required": [
@@ -399,16 +524,16 @@
       },
       "SealedInterfaceSellBitcoinResponse": {
         "required": [
-          "transferType"
+          "type"
         ],
         "type": "object",
         "properties": {
-          "transferType": {
+          "type": {
             "type": "string"
           }
         },
         "discriminator": {
-          "propertyName": "transferType"
+          "propertyName": "type"
         }
       },
       "SealedInterfaceValueResponse": {
@@ -431,6 +556,25 @@
             }
           }
         ]
+      },
+      "Sort": {
+        "required": [
+          "direction",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "writeOnly": true,
+            "example": "type"
+          },
+          "direction": {
+            "type": "string",
+            "writeOnly": true,
+            "example": "direction"
+          }
+        }
       },
       "ExplicitTypeAmountRequest": {
         "required": [
@@ -474,16 +618,16 @@
       },
       "ExplicitTypeSellBitcoinRequest": {
         "required": [
-          "transferType"
+          "type"
         ],
         "type": "object",
         "properties": {
-          "transferType": {
+          "type": {
             "type": "string"
           }
         },
         "discriminator": {
-          "propertyName": "transferType"
+          "propertyName": "type"
         }
       },
       "ExplicitTypeValueRequest": {
@@ -547,11 +691,11 @@
       "SealedClassSellAmountRequest": {
         "required": [
           "amount",
-          "transferType"
+          "type"
         ],
         "type": "object",
         "properties": {
-          "transferType": {
+          "type": {
             "$ref": "#/components/schemas/TransferType"
           },
           "amount": {
@@ -561,16 +705,16 @@
       },
       "SealedClassSellBitcoinRequest": {
         "required": [
-          "transferType"
+          "type"
         ],
         "type": "object",
         "properties": {
-          "transferType": {
+          "type": {
             "$ref": "#/components/schemas/TransferType"
           }
         },
         "discriminator": {
-          "propertyName": "transferType",
+          "propertyName": "type",
           "mapping": {
             "PERCENTAGE": "#/components/schemas/SealedClassSellPercentageRequest",
             "VALUE": "#/components/schemas/SealedClassSellValueRequest",
@@ -592,11 +736,11 @@
       "SealedClassSellPercentageRequest": {
         "required": [
           "percentage",
-          "transferType"
+          "type"
         ],
         "type": "object",
         "properties": {
-          "transferType": {
+          "type": {
             "$ref": "#/components/schemas/TransferType"
           },
           "percentage": {
@@ -608,12 +752,12 @@
       },
       "SealedClassSellValueRequest": {
         "required": [
-          "transferType",
+          "type",
           "value"
         ],
         "type": "object",
         "properties": {
-          "transferType": {
+          "type": {
             "$ref": "#/components/schemas/TransferType"
           },
           "value": {
@@ -636,11 +780,11 @@
       "SealedClassAmountResponse": {
         "required": [
           "amount",
-          "transferType"
+          "type"
         ],
         "type": "object",
         "properties": {
-          "transferType": {
+          "type": {
             "$ref": "#/components/schemas/TransferType"
           },
           "amount": {
@@ -651,11 +795,11 @@
       "SealedClassPercentageResponse": {
         "required": [
           "percentage",
-          "transferType"
+          "type"
         ],
         "type": "object",
         "properties": {
-          "transferType": {
+          "type": {
             "$ref": "#/components/schemas/TransferType"
           },
           "percentage": {
@@ -667,16 +811,16 @@
       },
       "SealedClassSellBitcoinResponse": {
         "required": [
-          "transferType"
+          "type"
         ],
         "type": "object",
         "properties": {
-          "transferType": {
+          "type": {
             "$ref": "#/components/schemas/TransferType"
           }
         },
         "discriminator": {
-          "propertyName": "transferType",
+          "propertyName": "type",
           "mapping": {
             "AMOUNT": "#/components/schemas/SealedClassAmountResponse",
             "PERCENTAGE": "#/components/schemas/SealedClassPercentageResponse",
@@ -697,18 +841,125 @@
       },
       "SealedClassValueResponse": {
         "required": [
-          "transferType",
+          "type",
           "value"
         ],
         "type": "object",
         "properties": {
-          "transferType": {
+          "type": {
             "$ref": "#/components/schemas/TransferType"
           },
           "value": {
             "type": "number",
             "description": "The value to sell",
             "example": 1.1
+          }
+        }
+      },
+      "Analysis": {
+        "required": [
+          "amount",
+          "description",
+          "isValuable",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the analysis",
+            "example": "Correctness analysis"
+          },
+          "description": {
+            "type": "string",
+            "description": "A description for the analysis",
+            "example": "The analysis describes whether you are correct or not"
+          },
+          "isValuable": {
+            "type": "boolean",
+            "description": "Whether the analysis is valuable"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/Amount"
+          }
+        }
+      },
+      "Child1": {
+        "required": [
+          "child1Field",
+          "type"
+        ],
+        "type": "object",
+        "description": "Child 1",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Parent"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "Child1"
+              },
+              "child1Field": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "Child2": {
+        "required": [
+          "child2Field",
+          "type"
+        ],
+        "type": "object",
+        "description": "Child 2",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Parent"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "Child2"
+              },
+              "child2Field": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "Parent": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          }
+        },
+        "discriminator": {
+          "propertyName": "type"
+        }
+      },
+      "Analyses": {
+        "required": [
+          "analyses"
+        ],
+        "type": "object",
+        "properties": {
+          "analyses": {
+            "type": "array",
+            "description": "A list of analyses",
+            "items": {
+              "$ref": "#/components/schemas/Analysis"
+            }
           }
         }
       }

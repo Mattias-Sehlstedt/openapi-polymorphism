@@ -30,6 +30,7 @@ import polymorphism.model.*;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Component
 public class SellBitcoinAdapter {
@@ -59,7 +60,10 @@ public class SellBitcoinAdapter {
     }
 
     public Mono<SealedInterfaceSellBitcoinResponse> sellBitcoinExplicit(ExplicitTypeSellBitcoinRequest request) {
-        return jsonTypeRequestBodyApi.sellBitcoinExplicit(convertRequest(request))
+        return jsonTypeRequestBodyApi.sellBitcoinExplicit(new JsonTypeRequestBodyApi.SellBitcoinExplicitRequest()
+                        .sellBitcoinExplicitRequestDTO(convertRequest(request))
+                        .schema(List.of(new SortDTO().type("type").direction("direction"), new SortDTO().type("type").direction("direction")))
+                        .content(List.of(new SortDTO().type("type").direction("direction"), new SortDTO().type("type").direction("direction"))))
                 .map(this::convertResponse);
     }
 
@@ -122,14 +126,14 @@ public class SellBitcoinAdapter {
     private SealedClassSellBitcoinRequestDTO convertRequest(SealedClassSellBitcoinRequest request) {
         return switch (request) {
             case SealedClassSellAmountRequest sealedClassSellAmountRequest -> new SealedClassSellAmountRequestDTO()
-                    .transferType(TransferTypeDTO.AMOUNT)
+                    .type(TransferTypeDTO.AMOUNT)
                     .amount(convertModel(sealedClassSellAmountRequest.amount));
             case SealedClassSellPercentageRequest sealedClassSellPercentageRequest ->
                     new SealedClassSellPercentageRequestDTO()
-                            .transferType(TransferTypeDTO.PERCENTAGE)
+                            .type(TransferTypeDTO.PERCENTAGE)
                             .percentage(sealedClassSellPercentageRequest.percentage);
             case SealedClassSellValueRequest sealedClassSellValueRequest -> new SealedClassSellValueRequestDTO()
-                    .transferType(TransferTypeDTO.VALUE)
+                    .type(TransferTypeDTO.VALUE)
                     .value(sealedClassSellValueRequest.value);
         };
     }

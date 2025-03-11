@@ -8,6 +8,6 @@ import java.math.BigDecimal;
 public record Amount(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "1.1")
         BigDecimal value,
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "SEK", format = "ISO 4217")
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED, pattern = "^S[a-z]K$", format = "ISO 4217")
         String currency) {
 }

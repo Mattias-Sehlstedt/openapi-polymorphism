@@ -23,7 +23,15 @@ import api.model.jsonType.response.SealedInterfaceAmountResponse;
 import api.model.jsonType.response.SealedInterfacePercentageResponse;
 import api.model.jsonType.response.SealedInterfaceSellBitcoinResponse;
 import api.model.jsonType.response.SealedInterfaceValueResponse;
+import api.model.query.Sort;
+import api.model.query.SortList;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import config.editors.SortEditor;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,8 +41,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.Optional;
 
 import static api.RequestExamples.*;
 
@@ -72,7 +84,21 @@ public class Controller {
                     @ApiResponse(responseCode = "201")
             }
     )
-    public Mono<SealedInterfaceSellBitcoinResponse> sellBitcoinExplicit(@RequestBody @Validated ExplicitTypeSellBitcoinRequest request) {
+    @Parameter(name = "schema", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(implementation = Sort.class)))
+    @Parameter(name = "content", in = ParameterIn.QUERY, content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Sort.class))))
+    public Mono<SealedInterfaceSellBitcoinResponse> sellBitcoinExplicit(
+            @RequestParam(name = "schema", required = false) List<String> schemaSort,
+            @RequestParam(name = "content", required = false) List<Sort> contentSort,
+            @RequestBody @Validated ExplicitTypeSellBitcoinRequest request
+    ) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Sort> schemas = Optional.ofNullable(schemaSort).map(list -> list.stream().map(s -> {
+            try {
+                return objectMapper.readValue(s, Sort.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }).toList()).orElse(List.of());
         if (environment.matchesProfiles(ENVIRONMENT_SERVER)) {
             return Mono.just(switch (request) {
                 case ExplicitTypePercentageRequest percentageRequest ->
@@ -174,5 +200,10 @@ public class Controller {
                 request.value(),
                 request.amount()
         );
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Sort.class, new SortEditor(new ObjectMapper()));
     }
 }

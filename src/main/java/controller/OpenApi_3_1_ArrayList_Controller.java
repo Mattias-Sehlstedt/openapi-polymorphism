@@ -22,11 +22,14 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Validated
 @RequestMapping(value = "/root", produces = "application/json")
 public class OpenApi_3_1_ArrayList_Controller {
+
+    private static final Amount AMOUNT = new Amount(BigDecimal.valueOf(1), "SEK");
 
     @Autowired
     public OpenApi_3_1_ArrayList_Controller() {
@@ -42,8 +45,8 @@ public class OpenApi_3_1_ArrayList_Controller {
     )
     public Mono<Analyses> getAnalyses() {
         return Mono.just(new Analyses(List.of(
-                        new Analysis("name1", "description1", false, new Amount(BigDecimal.valueOf(1), "SEK")),
-                        new Analysis("name2", "description2", true, new Amount(BigDecimal.valueOf(1), "SEK")))
+                        new Analysis("name1", "description1", false, AMOUNT, Optional.of("temp")),
+                        new Analysis("name2", "description2", true, AMOUNT, Optional.of("temp")))
                 )
         );
     }
@@ -58,8 +61,8 @@ public class OpenApi_3_1_ArrayList_Controller {
     )
     public Flux<Analysis> getAnalysesV2() {
         return Flux.just(
-                new Analysis("name1", "description1", false, new Amount(BigDecimal.valueOf(1), "SEK")),
-                new Analysis("name2", "description2", true, new Amount(BigDecimal.valueOf(1), "SEK"))
+                new Analysis("name1", "description1", false, AMOUNT, Optional.of("temp")),
+                new Analysis("name2", "description2", true, AMOUNT, Optional.of("temp"))
         );
     }
 
@@ -73,8 +76,8 @@ public class OpenApi_3_1_ArrayList_Controller {
     )
     public List<Analysis> getAnalysesV3() {
         return List.of(
-                new Analysis("name1", "description1", false, new Amount(BigDecimal.valueOf(1), "SEK")),
-                new Analysis("name2", "description2", true, new Amount(BigDecimal.valueOf(1), "SEK"))
+                new Analysis("name1", "description1", false, AMOUNT, Optional.of("temp")),
+                new Analysis("name2", "description2", true, AMOUNT, Optional.of("temp"))
         );
     }
 

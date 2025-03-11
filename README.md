@@ -1,3 +1,5 @@
+The application can be view at: http://localhost:8080/swagger-ui/index.html
+
 Jackson annotations in API classes does not work well with swagger-core since it will add a subclass "allOf" relation to the parent in the openAPI specification.
 
 This means that if the parent were to contain "oneOf" and a reference to each child, then all children would recursively refer to themselves by allOf -> parent -> oneOf -> themselves
