@@ -3,7 +3,9 @@ package api.model.query;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.ToString;
 
+@ToString
 public class Sort {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "type")

@@ -60,4 +60,19 @@ public abstract class RequestExamples {
                }
             }
             """;
+
+    public static final String CHILD_1 = """
+            {
+               "type": "CHILD_1",
+               "parentField": "parentValue",
+               "child1Field": "Child1Value"
+            }
+            """;
+    public static final String CHILD_2 = """
+            {
+               "type": "CHILD_2",
+               "parentField": "parentValue",
+               "child2Field": "Child2Value"
+            }
+            """;
 }

@@ -1,13 +1,12 @@
 package api.model.query;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.util.AutoPopulatingList;
+import lombok.ToString;
 
 import java.util.List;
 
+@ToString
 public class SortList {
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<Sort> sortList = new AutoPopulatingList<>(Sort.class);
+    public List<Sort> sortList;
 
 }

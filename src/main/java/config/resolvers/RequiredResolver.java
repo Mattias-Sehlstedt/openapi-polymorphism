@@ -22,9 +22,9 @@ public class RequiredResolver extends ModelResolver {
     }
 
     @Override
-    protected void addRequiredItem(io.swagger.v3.oas.models.media.Schema model, String propName) {
+    protected boolean addRequiredItem(io.swagger.v3.oas.models.media.Schema model, String propName) {
         if (model == null || propName == null || StringUtils.isBlank(propName)) {
-            return;
+            return false;
         }
         if (model.getRequired() == null || model.getRequired().isEmpty()) {
             model.addRequiredItem(propName);
@@ -32,5 +32,6 @@ public class RequiredResolver extends ModelResolver {
         if (model.getRequired().stream().noneMatch(propName::equals)) {
             model.addRequiredItem(propName);
         }
+        return true;
     }
 }

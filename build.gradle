@@ -23,7 +23,7 @@ dependencies {
     // Spring Boot Starter Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-json'
 
@@ -38,7 +38,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.4.0'
     testImplementation "org.wiremock:wiremock-jetty12:3.12.0"
-
 }
 
 test {
@@ -71,12 +70,14 @@ openApiGenerate {
     apiPackage.set("polymorphism.api")
     invokerPackage.set("polymorphism.invoker")
     modelPackage.set("polymorphism.model")
+    templateDir.set("$rootDir/artifact/template")
     configOptions.set([
             dateLibrary              : "java8",
             openApiNullable          : "false",
             useJakartaEe             : "true",
             useOneOfInterfaces       : "true",
-            useSingleRequestParameter: "static"
+            useSingleRequestParameter: "static",
+            additionalModelTypeAnnotations : "@lombok.experimental.SuperBuilder;@lombok.Data"
     ])
     modelNameSuffix = "DTO"
     generateApiDocumentation.set(false)
