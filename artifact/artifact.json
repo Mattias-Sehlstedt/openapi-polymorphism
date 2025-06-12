@@ -1,0 +1,181 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/root/sell": {
+      "post": {
+        "tags": [
+          "Sell"
+        ],
+        "description": "Sell",
+        "operationId": "sell",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ExplicitTypeAmountRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ExplicitTypePercentageRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ExplicitTypeValueRequest"
+                  }
+                ]
+              },
+              "examples": {
+                "Percentage": {
+                  "description": "Percentage",
+                  "value": {
+                    "type": "PERCENTAGE",
+                    "percentage": 100
+                  }
+                },
+                "Value": {
+                  "description": "Value",
+                  "value": {
+                    "type": "VALUE",
+                    "value": 1337
+                  }
+                },
+                "Amount": {
+                  "description": "Amount",
+                  "value": {
+                    "type": "AMOUNT",
+                    "amount": {
+                      "value": 1.1,
+                      "currency": "SEK"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Created"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Amount": {
+        "required": [
+          "currency",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "example": 1.1
+          },
+          "currency": {
+            "pattern": "^S[a-z]K$",
+            "type": "string",
+            "format": "ISO 4217"
+          }
+        },
+        "description": "An amount"
+      },
+      "ExplicitTypeAmountRequest": {
+        "required": [
+          "amount"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ExplicitTypeSellRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "$ref": "#/components/schemas/Amount"
+              }
+            }
+          }
+        ]
+      },
+      "ExplicitTypePercentageRequest": {
+        "required": [
+          "percentage"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ExplicitTypeSellRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "percentage": {
+                "type": "number",
+                "description": "The percentage to sell",
+                "example": 100
+              }
+            }
+          }
+        ]
+      },
+      "ExplicitTypeValueRequest": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ExplicitTypeSellRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            }
+          }
+        ]
+      },
+      "ExplicitTypeSellRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          }
+        },
+        "discriminator": {
+          "propertyName": "type"
+        }
+      },
+      "TransferType": {
+        "type": "string",
+        "description": "description",
+        "example": "PERCENTAGE",
+        "enum": [
+          "PERCENTAGE",
+          "AMOUNT",
+          "VALUE"
+        ]
+      }
+    }
+  }
+}

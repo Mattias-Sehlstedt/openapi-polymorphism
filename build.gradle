@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id "org.openapi.generator" version '7.13.0'
+}
+
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+dependencies {
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
+    implementation("jakarta.annotation:jakarta.annotation-api:3.0.0")
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    testImplementation platform('org.junit:junit-bom:5.10.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+var openApiGeneratedDir = "$rootDir/generated".toString()
+var openApiGeneratedDirSrc = openApiGeneratedDir.concat("/src/main/java")
+
+tasks.compileJava {
+    dependsOn(tasks.openApiGenerate)
+}
+
+tasks.clean {
+    delete("./generated")
+}
+
+sourceSets.main {
+    java.srcDir(openApiGeneratedDirSrc)
+}
+
+openApiGenerate {
+    generatorName.set("java")
+    inputSpec.set("$rootDir/artifact/artifact.json")
+    outputDir.set(openApiGeneratedDir.toString())
+    modelPackage.set("polymorphism.model")
+    configOptions.set([
+            dateLibrary                : "java8",
+            openApiNullable            : "false",
+            useJakartaEe               : "true",
+            useOneOfInterfaces         : "true",
+            additionalModelTypeAnnotations : "@lombok.experimental.SuperBuilder"
+    ])
+    modelNameSuffix = "DTO"
+    generateApiDocumentation.set(false)
+    generateApiTests.set(false)
+    generateModelDocumentation.set(false)
+    generateModelTests.set(false)
+    library.set("webclient")
+    ignoreFileOverride.set("$rootDir/artifact/.artifact.ignore")
+}

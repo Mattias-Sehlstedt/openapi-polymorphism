@@ -1,0 +1,11 @@
+*
+**/*
+
+!**/src/main/java/polymorphism/invoker/**
+!**/src/main/java/polymorphism/model/SellRequestDTO.java
+!**/src/main/java/polymorphism/model/AmountDTO.java
+!**/src/main/java/polymorphism/model/ExplicitTypeSellRequestDTO.java
+!**/src/main/java/polymorphism/model/ExplicitTypeAmountRequestDTO.java
+!**/src/main/java/polymorphism/model/ExplicitTypePercentageRequestDTO.java
+!**/src/main/java/polymorphism/model/ExplicitTypeValueRequestDTO.java
+!**/src/main/java/polymorphism/model/TransferTypeDTO.java
