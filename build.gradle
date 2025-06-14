@@ -30,32 +30,32 @@ test {
     useJUnitPlatform()
 }
 
-var openApiGeneratedDir = "$rootDir/generated".toString()
-var openApiGeneratedDirSrc = openApiGeneratedDir.concat("/src/main/java")
+var openApiGeneratedDir = "$rootDir/src/generated".toString()
 
 tasks.compileJava {
     dependsOn(tasks.openApiGenerate)
 }
 
 tasks.clean {
-    delete("./generated")
+    delete(openApiGeneratedDir)
 }
 
 sourceSets.main {
-    java.srcDir(openApiGeneratedDirSrc)
+    java.srcDir(openApiGeneratedDir.concat("/java"))
 }
 
 openApiGenerate {
     generatorName.set("java")
     inputSpec.set("$rootDir/artifact/artifact.json")
-    outputDir.set(openApiGeneratedDir.toString())
+    outputDir.set(openApiGeneratedDir)
     modelPackage.set("polymorphism.model")
     configOptions.set([
-            dateLibrary                : "java8",
-            openApiNullable            : "false",
-            useJakartaEe               : "true",
-            useOneOfInterfaces         : "true",
-            additionalModelTypeAnnotations : "@lombok.experimental.SuperBuilder"
+            dateLibrary                   : "java8",
+            openApiNullable               : "false",
+            useJakartaEe                  : "true",
+            useOneOfInterfaces            : "true",
+            additionalModelTypeAnnotations: "@lombok.experimental.SuperBuilder",
+            sourceFolder                  : "java"
     ])
     modelNameSuffix = "DTO"
     generateApiDocumentation.set(false)
