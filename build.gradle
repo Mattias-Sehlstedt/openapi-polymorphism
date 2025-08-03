@@ -70,7 +70,6 @@ openApiGenerate {
     apiPackage.set("polymorphism.api")
     invokerPackage.set("polymorphism.invoker")
     modelPackage.set("polymorphism.model")
-    templateDir.set("$rootDir/artifact/template")
     configOptions.set([
             dateLibrary              : "java8",
             openApiNullable          : "false",
