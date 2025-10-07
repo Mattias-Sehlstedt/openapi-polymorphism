@@ -78,15 +78,9 @@ public class Controller {
             }
     )
     public Mono<SealedInterfaceSellBitcoinResponse> sellBitcoinExplicit(
-            @RequestBody @Validated ExplicitTypeSellBitcoinRequest request
-    ) {
+            @RequestBody @Validated ExplicitTypeSellBitcoinRequest request) {
         if (environment.matchesProfiles(ENVIRONMENT_SERVER)) {
-            return Mono.just(switch (request) {
-                case ExplicitTypePercentageRequest percentageRequest ->
-                        new SealedInterfacePercentageResponse(percentageRequest.percentage);
-                case ExplicitTypeValueRequest valueRequest -> new SealedInterfaceValueResponse(valueRequest.value);
-                case ExplicitTypeAmountRequest amountRequest -> new SealedInterfaceAmountResponse(amountRequest.amount);
-            });
+            return Mono.just(serverResponse(request));
         } else {
             return dataService.sellInstrument(SellConverter.convertRequest(request))
                     .map(SellConverter::convertToSealedInterfaceResponse);
@@ -115,14 +109,10 @@ public class Controller {
                     @ApiResponse(responseCode = "201")
             }
     )
-    public Mono<SealedInterfaceSellBitcoinResponse> sellBitcoinImplicit(@RequestBody @Validated ImplicitTypeSellBitcoinRequest request) {
+    public Mono<SealedInterfaceSellBitcoinResponse> sellBitcoinImplicit(
+            @RequestBody @Validated ImplicitTypeSellBitcoinRequest request) {
         if (environment.matchesProfiles(ENVIRONMENT_SERVER)) {
-            return Mono.just(switch (request) {
-                case ImplicitTypePercentageRequest percentageRequest ->
-                        new SealedInterfacePercentageResponse(percentageRequest.percentage);
-                case ImplicitTypeValueRequest valueRequest -> new SealedInterfaceValueResponse(valueRequest.value);
-                case ImplicitTypeAmountRequest amountRequest -> new SealedInterfaceAmountResponse(amountRequest.amount);
-            });
+            return Mono.just(serverResponse(request));
         } else {
             return dataService.sellInstrument(SellConverter.convertRequest(request))
                     .map(SellConverter::convertToSealedInterfaceResponse);
@@ -146,14 +136,10 @@ public class Controller {
                     @ApiResponse(responseCode = "201")
             }
     )
-    public Mono<SealedClassSellBitcoinResponse> sellBitcoinDiscriminated(@RequestBody @Validated SealedClassSellBitcoinRequest request) {
+    public Mono<SealedClassSellBitcoinResponse> sellBitcoinDiscriminated(
+            @RequestBody @Validated SealedClassSellBitcoinRequest request) {
         if (environment.matchesProfiles(ENVIRONMENT_SERVER)) {
-            return Mono.just(switch (request) {
-                case SealedClassSellPercentageRequest percentageRequest ->
-                        new SealedClassPercentageResponse(percentageRequest.percentage);
-                case SealedClassSellValueRequest valueRequest -> new SealedClassValueResponse(valueRequest.value);
-                case SealedClassSellAmountRequest amountRequest -> new SealedClassAmountResponse(amountRequest.amount);
-            });
+            return Mono.just(serverResponse(request));
         } else {
             return dataService.sellInstrument(SellConverter.convertRequest(request))
                     .map(SellConverter::convertToSealedClassResponse);
@@ -189,5 +175,32 @@ public class Controller {
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Sort.class, new SortEditor(new ObjectMapper()));
+    }
+
+    private static SealedInterfaceSellBitcoinResponse serverResponse(ExplicitTypeSellBitcoinRequest request) {
+        return switch (request) {
+            case ExplicitTypePercentageRequest percentageRequest ->
+                    new SealedInterfacePercentageResponse(percentageRequest.percentage);
+            case ExplicitTypeValueRequest valueRequest -> new SealedInterfaceValueResponse(valueRequest.value);
+            case ExplicitTypeAmountRequest amountRequest -> new SealedInterfaceAmountResponse(amountRequest.amount);
+        };
+    }
+
+    private static SealedInterfaceSellBitcoinResponse serverResponse(ImplicitTypeSellBitcoinRequest request) {
+        return switch (request) {
+            case ImplicitTypePercentageRequest percentageRequest ->
+                    new SealedInterfacePercentageResponse(percentageRequest.percentage);
+            case ImplicitTypeValueRequest valueRequest -> new SealedInterfaceValueResponse(valueRequest.value);
+            case ImplicitTypeAmountRequest amountRequest -> new SealedInterfaceAmountResponse(amountRequest.amount);
+        };
+    }
+
+    private static SealedClassSellBitcoinResponse serverResponse(SealedClassSellBitcoinRequest request) {
+        return switch (request) {
+            case SealedClassSellPercentageRequest percentageRequest ->
+                    new SealedClassPercentageResponse(percentageRequest.percentage);
+            case SealedClassSellValueRequest valueRequest -> new SealedClassValueResponse(valueRequest.value);
+            case SealedClassSellAmountRequest amountRequest -> new SealedClassAmountResponse(amountRequest.amount);
+        };
     }
 }
