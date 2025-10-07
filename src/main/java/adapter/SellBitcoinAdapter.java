@@ -1,26 +1,6 @@
 package adapter;
 
-import api.model.Amount;
-import api.model.discriminator.request.SealedClassSellAmountRequest;
-import api.model.discriminator.request.SealedClassSellBitcoinRequest;
-import api.model.discriminator.request.SealedClassSellPercentageRequest;
-import api.model.discriminator.request.SealedClassSellValueRequest;
-import api.model.discriminator.response.SealedClassAmountResponse;
-import api.model.discriminator.response.SealedClassPercentageResponse;
-import api.model.discriminator.response.SealedClassSellBitcoinResponse;
-import api.model.discriminator.response.SealedClassValueResponse;
-import api.model.jsonType.explicit.type.request.ExplicitTypeAmountRequest;
-import api.model.jsonType.explicit.type.request.ExplicitTypePercentageRequest;
-import api.model.jsonType.explicit.type.request.ExplicitTypeSellBitcoinRequest;
-import api.model.jsonType.explicit.type.request.ExplicitTypeValueRequest;
-import api.model.jsonType.implicit.type.request.ImplicitTypeAmountRequest;
-import api.model.jsonType.implicit.type.request.ImplicitTypePercentageRequest;
-import api.model.jsonType.implicit.type.request.ImplicitTypeSellBitcoinRequest;
-import api.model.jsonType.implicit.type.request.ImplicitTypeValueRequest;
-import api.model.jsonType.response.SealedInterfaceAmountResponse;
-import api.model.jsonType.response.SealedInterfacePercentageResponse;
-import api.model.jsonType.response.SealedInterfaceSellBitcoinResponse;
-import api.model.jsonType.response.SealedInterfaceValueResponse;
+import domain.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import polymorphism.api.DiscriminatedRequestBodyApi;
@@ -30,10 +10,13 @@ import polymorphism.model.*;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.List;
 
 @Component
 public class SellBitcoinAdapter {
+
+    private static final Instrument NO_INSTRUMENT = null;
 
     private final FlatRequestBodyApi flatRequestBodyApi;
     private final JsonTypeRequestBodyApi jsonTypeRequestBodyApi;
@@ -59,90 +42,90 @@ public class SellBitcoinAdapter {
                 .amount(AMOUNT_DTO));
     }
 
-    public Mono<SealedInterfaceSellBitcoinResponse> sellBitcoinExplicit(ExplicitTypeSellBitcoinRequest request) {
+    public Mono<SellInstrument> sellBitcoinExplicit(SellInstrument request) {
         return jsonTypeRequestBodyApi.sellBitcoinExplicit(new JsonTypeRequestBodyApi.SellBitcoinExplicitRequest()
-                        .sellBitcoinExplicitRequestDTO(convertRequest(request))
+                        .sellBitcoinExplicitRequestDTO(convertToExplicitRequest(request))
                         .schema(List.of(new SortDTO().type("type").direction("direction"), new SortDTO().type("type").direction("direction")))
                         .content(List.of(new SortDTO().type("type").direction("direction"), new SortDTO().type("type").direction("direction"))))
                 .map(this::convertResponse);
     }
 
-    public Mono<SealedInterfaceSellBitcoinResponse> sellBitcoinImplicit(ImplicitTypeSellBitcoinRequest request) {
-        return jsonTypeRequestBodyApi.sellBitcoinImplicit(convertRequest(request))
+    public Mono<SellInstrument> sellBitcoinImplicit(SellInstrument request) {
+        return jsonTypeRequestBodyApi.sellBitcoinImplicit(convertToImplicitRequest(request))
                 .map(this::convertResponse);
     }
 
-    public Mono<SealedClassSellBitcoinResponse> sellBitcoinDiscriminated(SealedClassSellBitcoinRequest request) {
-        return discriminatedRequestBodyApi.sellBitcoinDiscriminated(convertRequest(request))
+    public Mono<SellInstrument> sellBitcoinDiscriminated(SellInstrument request) {
+        return discriminatedRequestBodyApi.sellBitcoinDiscriminated(convertToDiscriminatedRequest(request))
                 .map(this::convertResponse);
     }
 
-    private SealedInterfaceSellBitcoinResponse convertResponse(SellBitcoinImplicit201ResponseDTO sellBitcoinImplicit201ResponseDTO) {
+    private SellInstrument convertResponse(SellBitcoinImplicit201ResponseDTO sellBitcoinImplicit201ResponseDTO) {
         return switch (sellBitcoinImplicit201ResponseDTO) {
             case SealedInterfaceAmountResponseDTO sealedInterfaceAmountResponseDTO ->
-                    new SealedInterfaceAmountResponse(convertModel(sealedInterfaceAmountResponseDTO.getAmount()));
+                    new SellAmount(NO_INSTRUMENT, convertModel(sealedInterfaceAmountResponseDTO.getAmount()));
             case SealedInterfacePercentageResponseDTO sealedInterfacePercentageResponseDTO ->
-                    new SealedInterfacePercentageResponse(sealedInterfacePercentageResponseDTO.getPercentage());
+                    new SellPercentage(NO_INSTRUMENT, new Percentage(sealedInterfacePercentageResponseDTO.getPercentage()));
             case SealedInterfaceValueResponseDTO sealedInterfaceValueResponseDTO ->
-                    new SealedInterfaceValueResponse(sealedInterfaceValueResponseDTO.getValue());
+                    new SellValue(NO_INSTRUMENT, new Shares(sealedInterfaceValueResponseDTO.getValue()));
             default -> throw new IllegalStateException("Unexpected value: " + sellBitcoinImplicit201ResponseDTO);
         };
     }
 
-    private SealedClassSellBitcoinResponse convertResponse(SealedClassSellBitcoinResponseDTO request) {
+    private SellInstrument convertResponse(SealedClassSellBitcoinResponseDTO request) {
         return switch (request) {
             case SealedClassAmountResponseDTO sealedClassAmountResponseDTO ->
-                    new SealedClassAmountResponse(convertModel(sealedClassAmountResponseDTO.getAmount()));
+                    new SellAmount(NO_INSTRUMENT, convertModel(sealedClassAmountResponseDTO.getAmount()));
             case SealedClassPercentageResponseDTO sealedClassPercentageResponseDTO ->
-                    new SealedClassPercentageResponse(sealedClassPercentageResponseDTO.getPercentage());
+                    new SellPercentage(NO_INSTRUMENT, new Percentage(sealedClassPercentageResponseDTO.getPercentage()));
             case SealedClassValueResponseDTO sealedClassValueResponseDTO ->
-                    new SealedClassValueResponse(sealedClassValueResponseDTO.getValue());
+                    new SellValue(NO_INSTRUMENT, new Shares(sealedClassValueResponseDTO.getValue()));
             default -> throw new IllegalStateException("Unexpected value: " + request);
         };
     }
 
-    private SellBitcoinExplicitRequestDTO convertRequest(ExplicitTypeSellBitcoinRequest request) {
+    private SellBitcoinExplicitRequestDTO convertToExplicitRequest(SellInstrument request) {
         return switch (request) {
-            case ExplicitTypeAmountRequest explicitTypeAmountRequest -> new ExplicitTypeAmountRequestDTO()
-                    .amount(convertModel(explicitTypeAmountRequest.amount));
-            case ExplicitTypePercentageRequest explicitTypePercentageRequest ->
-                    new ExplicitTypePercentageRequestDTO().percentage(explicitTypePercentageRequest.percentage);
-            case ExplicitTypeValueRequest explicitTypeValueRequest ->
-                    new ExplicitTypeValueRequestDTO().value(explicitTypeValueRequest.value);
+            case SellAmount sellAmount -> new ExplicitTypeAmountRequestDTO()
+                    .amount(convertModel(sellAmount.amount()));
+            case SellPercentage sellPercentage ->
+                    new ExplicitTypePercentageRequestDTO().percentage(sellPercentage.percentage().value());
+            case SellValue sellValue ->
+                    new ExplicitTypeValueRequestDTO().value(sellValue.shares().value());
         };
     }
 
-    private SellBitcoinImplicitRequestDTO convertRequest(ImplicitTypeSellBitcoinRequest request) {
+    private SellBitcoinImplicitRequestDTO convertToImplicitRequest(SellInstrument request) {
         return switch (request) {
-            case ImplicitTypeAmountRequest implicitTypeAmountRequest -> new ImplicitTypeAmountRequestDTO()
-                    .amount(convertModel(implicitTypeAmountRequest.amount));
-            case ImplicitTypePercentageRequest implicitTypePercentageRequest ->
-                    new ImplicitTypePercentageRequestDTO().percentage(implicitTypePercentageRequest.percentage);
-            case ImplicitTypeValueRequest implicitTypeValueRequest ->
-                    new ImplicitTypeValueRequestDTO().value(implicitTypeValueRequest.value);
+            case SellAmount sellAmount -> new ImplicitTypeAmountRequestDTO()
+                    .amount(convertModel(sellAmount.amount()));
+            case SellPercentage sellPercentage ->
+                    new ImplicitTypePercentageRequestDTO().percentage(sellPercentage.percentage().value());
+            case SellValue sellValue ->
+                    new ImplicitTypeValueRequestDTO().value(sellValue.shares().value());
         };
     }
 
-    private SealedClassSellBitcoinRequestDTO convertRequest(SealedClassSellBitcoinRequest request) {
+    private SealedClassSellBitcoinRequestDTO convertToDiscriminatedRequest(SellInstrument request) {
         return switch (request) {
-            case SealedClassSellAmountRequest sealedClassSellAmountRequest -> new SealedClassSellAmountRequestDTO()
+            case SellAmount sellAmount -> new SealedClassSellAmountRequestDTO()
                     .type(TransferTypeDTO.AMOUNT)
-                    .amount(convertModel(sealedClassSellAmountRequest.amount));
-            case SealedClassSellPercentageRequest sealedClassSellPercentageRequest ->
+                    .amount(convertModel(sellAmount.amount()));
+            case SellPercentage sellPercentage ->
                     new SealedClassSellPercentageRequestDTO()
                             .type(TransferTypeDTO.PERCENTAGE)
-                            .percentage(sealedClassSellPercentageRequest.percentage);
-            case SealedClassSellValueRequest sealedClassSellValueRequest -> new SealedClassSellValueRequestDTO()
+                            .percentage(sellPercentage.percentage().value());
+            case SellValue sellValue -> new SealedClassSellValueRequestDTO()
                     .type(TransferTypeDTO.VALUE)
-                    .value(sealedClassSellValueRequest.value);
+                    .value(sellValue.shares().value());
         };
     }
 
     private AmountDTO convertModel(Amount amount) {
-        return new AmountDTO().currency(amount.currency()).value(amount.value());
+        return new AmountDTO().currency(amount.currency().getCurrencyCode()).value(amount.value());
     }
 
     private Amount convertModel(AmountDTO amount) {
-        return new Amount(amount.getValue(), amount.getCurrency());
+        return new Amount(Currency.getInstance(amount.getCurrency()), amount.getValue());
     }
 }

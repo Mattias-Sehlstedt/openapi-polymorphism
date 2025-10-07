@@ -4,6 +4,7 @@ import adapter.SellBitcoinAdapter;
 import config.SellBitcoinComponent;
 import config.resolvers.RequiredResolver;
 import controller.Controller;
+import domain.service.DataService;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.core.util.Json;
 import org.springframework.boot.SpringApplication;
@@ -17,6 +18,7 @@ import polymorphism.api.JsonTypeRequestBodyApi;
         Controller.class,
         SellBitcoinComponent.class,
         SellBitcoinAdapter.class,
+        DataService.class,
         FlatRequestBodyApi.class,
         JsonTypeRequestBodyApi.class,
         DiscriminatedRequestBodyApi.class

@@ -1,14 +1,12 @@
 package integration;
 
 import api.model.Amount;
-import api.model.TransferType;
 import api.model.jsonType.explicit.type.request.ExplicitTypeAmountRequest;
 import api.model.jsonType.explicit.type.request.ExplicitTypeSellBitcoinRequest;
 import api.model.jsonType.response.SealedInterfaceAmountResponse;
 import api.model.jsonType.response.SealedInterfacePercentageResponse;
 import api.model.jsonType.response.SealedInterfaceSellBitcoinResponse;
 import api.model.jsonType.response.SealedInterfaceValueResponse;
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -78,10 +76,10 @@ public class PolymorphismTest {
         ExplicitTypeSellBitcoinRequest request = new ExplicitTypeAmountRequest(
                 new Amount(BigDecimal.valueOf(10), "SEK")
         );
-        return restTemplate.exchange(
-                new RequestEntity<>(request, HttpMethod.POST, URI.create(BASE_PATH + port + "/json-type/explicit/sell-bitcoin")),
-                SealedInterfaceSellBitcoinResponse.class
-        ).getBody();
+        return restTemplate
+                .exchange(new RequestEntity<>(request, HttpMethod.POST, URI.create(BASE_PATH + port + "/json-type/explicit/sell-bitcoin")),
+                        SealedInterfaceSellBitcoinResponse.class)
+                .getBody();
     }
 
     private static Stream<Arguments> get_json_type_response() {

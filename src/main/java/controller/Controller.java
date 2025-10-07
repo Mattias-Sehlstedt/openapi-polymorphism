@@ -1,6 +1,6 @@
 package controller;
 
-import adapter.SellBitcoinAdapter;
+import api.converters.SellConverter;
 import api.model.SellBitcoinRequest;
 import api.model.SellBitcoinResponse;
 import api.model.discriminator.request.SealedClassSellAmountRequest;
@@ -26,6 +26,7 @@ import api.model.jsonType.response.SealedInterfaceValueResponse;
 import api.model.query.Sort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import config.editors.SortEditor;
+import domain.service.DataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -51,11 +52,11 @@ public class Controller {
     private static final String ENVIRONMENT_SERVER = "server";
 
     private final Environment environment;
-    private final SellBitcoinAdapter sellBitcoinAdapter;
+    private final DataService dataService;
 
     @Autowired
-    public Controller(SellBitcoinAdapter sellBitcoinAdapter, Environment environment) {
-        this.sellBitcoinAdapter = sellBitcoinAdapter;
+    public Controller(DataService dataService, Environment environment) {
+        this.dataService = dataService;
         this.environment = environment;
     }
 
@@ -87,7 +88,8 @@ public class Controller {
                 case ExplicitTypeAmountRequest amountRequest -> new SealedInterfaceAmountResponse(amountRequest.amount);
             });
         } else {
-            return sellBitcoinAdapter.sellBitcoinExplicit(request);
+            return dataService.sellInstrument(SellConverter.convertRequest(request))
+                    .map(SellConverter::convertToSealedInterfaceResponse);
         }
     }
 
@@ -122,7 +124,8 @@ public class Controller {
                 case ImplicitTypeAmountRequest amountRequest -> new SealedInterfaceAmountResponse(amountRequest.amount);
             });
         } else {
-            return sellBitcoinAdapter.sellBitcoinImplicit(request);
+            return dataService.sellInstrument(SellConverter.convertRequest(request))
+                    .map(SellConverter::convertToSealedInterfaceResponse);
         }
     }
 
@@ -152,7 +155,8 @@ public class Controller {
                 case SealedClassSellAmountRequest amountRequest -> new SealedClassAmountResponse(amountRequest.amount);
             });
         } else {
-            return sellBitcoinAdapter.sellBitcoinDiscriminated(request);
+            return dataService.sellInstrument(SellConverter.convertRequest(request))
+                    .map(SellConverter::convertToSealedClassResponse);
         }
     }
 
