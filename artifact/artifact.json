@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "OpenAPI definition",
     "version": "v0"
@@ -11,6 +11,87 @@
     }
   ],
   "paths": {
+    "/root/v2/corporate-actions/{corporate-action-id}": {
+      "post": {
+        "tags": [
+          "Corporate actions"
+        ],
+        "operationId": "submitElectionDecision",
+        "parameters": [
+          {
+            "name": "corporate-action-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "example": 1
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ElectionDecisionV2FixedElection"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ElectionDecisionV2Oversubscription"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ElectionDecisionV2Payout"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ElectionDecisionV2Quantity"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/root/v1/corporate-actions/{corporate-action-id}": {
+      "post": {
+        "tags": [
+          "Corporate actions"
+        ],
+        "operationId": "submitElectionDecision_1",
+        "parameters": [
+          {
+            "name": "corporate-action-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "example": 1
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ElectionDecision"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
     "/root/json-type/implicit/sell-bitcoin": {
       "post": {
         "tags": [
@@ -92,34 +173,6 @@
         ],
         "description": "Sell your bitcoin",
         "operationId": "sellBitcoinExplicit",
-        "parameters": [
-          {
-            "name": "schema",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Sort"
-              }
-            }
-          },
-          {
-            "name": "content",
-            "in": "query",
-            "required": false,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Sort"
-                  }
-                }
-              }
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -301,130 +354,344 @@
         }
       }
     },
-    "/root/v3/analyses": {
+    "/root/v2/corporate-actions": {
       "get": {
         "tags": [
-          "Analyses"
+          "Corporate actions"
         ],
-        "description": "Get analyses",
-        "operationId": "getAnalysesV3",
+        "operationId": "getCorporateActions",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "example": 1
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "maximum": 100
+            },
+            "example": 100
+          },
+          {
+            "name": "reference",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "account-1"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedCorporateActionsV2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/root/v1/corporate-actions": {
+      "get": {
+        "tags": [
+          "Corporate actions"
+        ],
+        "operationId": "getCorporateActions_1",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "example": 1
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "maximum": 100
+            },
+            "example": 100
+          },
+          {
+            "name": "reference",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "account-1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedCorporateActions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/root/sort-with-custom-query-parameter": {
+      "get": {
+        "tags": [
+          "Sort with Json-query parameter"
+        ],
+        "description": "Sell your bitcoin",
+        "operationId": "customQueryParameter",
+        "parameters": [
+          {
+            "name": "schema",
+            "in": "query",
+            "required": false,
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Sort"
+              }
+            }
+          },
+          {
+            "name": "list-of-objects",
+            "in": "query",
+            "required": false,
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Analysis"
+                    "$ref": "#/components/schemas/Sort"
                   }
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/root/v2/analyses": {
-      "get": {
-        "tags": [
-          "Analyses"
-        ],
-        "description": "Get analyses",
-        "operationId": "getAnalysesV2",
-        "responses": {
-          "200": {
-            "description": "OK",
+          },
+          {
+            "name": "object-list",
+            "in": "query",
+            "required": false,
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Analysis"
+                    "$ref": "#/components/schemas/Sort"
                   }
                 }
               }
             }
           }
-        }
-      }
-    },
-    "/root/json-annotation-schema-one-of": {
-      "get": {
-        "tags": [
-          "DoubleAnnotations"
         ],
-        "description": "jsonAnnotationAndSchemaOneOf",
-        "operationId": "jsonAnnotationAndSchemaOneOf",
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/Child1"
-                    },
-                    {
-                      "$ref": "#/components/schemas/Child2"
-                    }
-                  ]
-                }
-              }
-            }
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
           }
-        }
-      }
-    },
-    "/root/analyses": {
-      "get": {
-        "tags": [
-          "Analyses"
-        ],
-        "description": "Get analyses",
-        "operationId": "getAnalyses",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Analyses"
-                }
-              }
-            }
-          }
-        }
+        },
+        "x-internal": "true"
       }
     }
   },
   "components": {
     "schemas": {
-      "Amount": {
+      "ElectionDecisionV2": {
+        "discriminator": {
+          "propertyName": "type"
+        },
+        "properties": {
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "ElectionDecisionV2FixedElection": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ElectionDecisionV2"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "electionId": {
+                "type": "integer",
+                "format": "int32",
+                "example": 1
+              },
+              "type": {
+                "type": "string",
+                "example": "ElectionDecisionV2FixedElection"
+              }
+            }
+          }
+        ],
+        "required": [
+          "electionId"
+        ]
+      },
+      "ElectionDecisionV2Oversubscription": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ElectionDecisionV2"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "electionId": {
+                "type": "integer",
+                "format": "int32",
+                "example": 1
+              },
+              "quantity": {
+                "type": "integer",
+                "format": "int32",
+                "example": 1
+              },
+              "type": {
+                "type": "string",
+                "example": "ElectionDecisionV2Oversubscription"
+              }
+            }
+          }
+        ],
+        "required": [
+          "electionId",
+          "quantity"
+        ]
+      },
+      "ElectionDecisionV2Payout": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ElectionDecisionV2"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "electionId": {
+                "type": "integer",
+                "format": "int32",
+                "example": 1
+              },
+              "currency": {
+                "type": "string",
+                "format": "ISO 4217",
+                "example": "SEK"
+              },
+              "type": {
+                "type": "string",
+                "example": "ElectionDecisionV2Payout"
+              }
+            }
+          }
+        ],
         "required": [
           "currency",
-          "value"
+          "electionId"
+        ]
+      },
+      "ElectionDecisionV2Quantity": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ElectionDecisionV2"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "electionId": {
+                "type": "integer",
+                "format": "int32",
+                "example": 1
+              },
+              "quantity": {
+                "type": "integer",
+                "format": "int32",
+                "example": 1
+              },
+              "type": {
+                "type": "string",
+                "example": "ElectionDecisionV2Quantity"
+              }
+            }
+          }
         ],
+        "required": [
+          "electionId",
+          "quantity"
+        ]
+      },
+      "ElectionDecision": {
         "type": "object",
+        "properties": {
+          "electionId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "overSubscriptionQuantity": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "currency": {
+            "type": "string",
+            "example": "SEK"
+          }
+        }
+      },
+      "Amount": {
+        "type": "object",
+        "description": "An amount",
         "properties": {
           "value": {
             "type": "number",
             "example": 1.1
           },
           "currency": {
-            "pattern": "^S[a-z]K$",
             "type": "string",
-            "format": "ISO 4217"
+            "format": "ISO 4217",
+            "example": "SEK"
           }
         },
-        "description": "An amount"
+        "required": [
+          "currency",
+          "value"
+        ]
       },
       "ImplicitTypeAmountRequest": {
-        "required": [
-          "amount"
-        ],
-        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/ImplicitTypeSellBitcoinRequest"
@@ -433,17 +700,17 @@
             "type": "object",
             "properties": {
               "amount": {
-                "$ref": "#/components/schemas/Amount"
+                "$ref": "#/components/schemas/Amount",
+                "description": "The amount to sell"
               }
             }
           }
+        ],
+        "required": [
+          "amount"
         ]
       },
       "ImplicitTypePercentageRequest": {
-        "required": [
-          "percentage"
-        ],
-        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/ImplicitTypeSellBitcoinRequest"
@@ -458,16 +725,13 @@
               }
             }
           }
+        ],
+        "required": [
+          "percentage"
         ]
       },
-      "ImplicitTypeSellBitcoinRequest": {
-        "type": "object"
-      },
+      "ImplicitTypeSellBitcoinRequest": {},
       "ImplicitTypeValueRequest": {
-        "required": [
-          "value"
-        ],
-        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/ImplicitTypeSellBitcoinRequest"
@@ -480,13 +744,12 @@
               }
             }
           }
+        ],
+        "required": [
+          "value"
         ]
       },
       "SealedInterfaceAmountResponse": {
-        "required": [
-          "amount"
-        ],
-        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/SealedInterfaceSellBitcoinResponse"
@@ -495,17 +758,17 @@
             "type": "object",
             "properties": {
               "amount": {
-                "$ref": "#/components/schemas/Amount"
+                "$ref": "#/components/schemas/Amount",
+                "description": "The amount to sell"
               }
             }
           }
+        ],
+        "required": [
+          "amount"
         ]
       },
       "SealedInterfacePercentageResponse": {
-        "required": [
-          "percentage"
-        ],
-        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/SealedInterfaceSellBitcoinResponse"
@@ -520,27 +783,25 @@
               }
             }
           }
+        ],
+        "required": [
+          "percentage"
         ]
       },
       "SealedInterfaceSellBitcoinResponse": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
+        "discriminator": {
+          "propertyName": "type"
+        },
         "properties": {
           "type": {
             "type": "string"
           }
         },
-        "discriminator": {
-          "propertyName": "type"
-        }
+        "required": [
+          "type"
+        ]
       },
       "SealedInterfaceValueResponse": {
-        "required": [
-          "value"
-        ],
-        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/SealedInterfaceSellBitcoinResponse"
@@ -555,32 +816,12 @@
               }
             }
           }
+        ],
+        "required": [
+          "value"
         ]
       },
-      "Sort": {
-        "required": [
-          "direction",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "writeOnly": true,
-            "example": "type"
-          },
-          "direction": {
-            "type": "string",
-            "writeOnly": true,
-            "example": "direction"
-          }
-        }
-      },
       "ExplicitTypeAmountRequest": {
-        "required": [
-          "amount"
-        ],
-        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/ExplicitTypeSellBitcoinRequest"
@@ -589,17 +830,17 @@
             "type": "object",
             "properties": {
               "amount": {
-                "$ref": "#/components/schemas/Amount"
+                "$ref": "#/components/schemas/Amount",
+                "description": "The amount to sell"
               }
             }
           }
+        ],
+        "required": [
+          "amount"
         ]
       },
       "ExplicitTypePercentageRequest": {
-        "required": [
-          "percentage"
-        ],
-        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/ExplicitTypeSellBitcoinRequest"
@@ -614,27 +855,25 @@
               }
             }
           }
+        ],
+        "required": [
+          "percentage"
         ]
       },
       "ExplicitTypeSellBitcoinRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
+        "discriminator": {
+          "propertyName": "type"
+        },
         "properties": {
           "type": {
             "type": "string"
           }
         },
-        "discriminator": {
-          "propertyName": "type"
-        }
+        "required": [
+          "type"
+        ]
       },
       "ExplicitTypeValueRequest": {
-        "required": [
-          "value"
-        ],
-        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/ExplicitTypeSellBitcoinRequest"
@@ -647,10 +886,14 @@
               }
             }
           }
+        ],
+        "required": [
+          "value"
         ]
       },
       "SellBitcoinRequest": {
         "type": "object",
+        "description": "The quantity of Bitcoin to sell. Can either be a percentage, a value (number of bitcoins) or an amount (the value to sell given in another currency).",
         "properties": {
           "percentage": {
             "type": "number",
@@ -661,58 +904,52 @@
             "description": "Mutually exclusive with percentage and amount"
           },
           "amount": {
-            "$ref": "#/components/schemas/Amount"
+            "$ref": "#/components/schemas/Amount",
+            "description": "Mutually exclusive with value and percentage"
           }
-        },
-        "description": "The quantity of Bitcoin to sell. Can either be a percentage, a value (number of bitcoins) or an amount (the value to sell given in another currency)."
+        }
       },
       "SellBitcoinResponse": {
+        "type": "object",
+        "description": "The quantity of Bitcoin to sell. Can either be a percentage, a value (number of bitcoins) or an amount (the value to sell given in another currency).",
+        "properties": {
+          "percentage": {
+            "type": "number",
+            "description": "Mutually exclusive with value and amount"
+          },
+          "value": {
+            "type": "number",
+            "description": "Mutually exclusive with percentage and amount"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/Amount",
+            "description": "Mutually exclusive with value and percentage"
+          }
+        },
         "required": [
           "amount",
           "percentage",
           "value"
-        ],
-        "type": "object",
-        "properties": {
-          "percentage": {
-            "type": "number",
-            "description": "Mutually exclusive with value and amount"
-          },
-          "value": {
-            "type": "number",
-            "description": "Mutually exclusive with percentage and amount"
-          },
-          "amount": {
-            "$ref": "#/components/schemas/Amount"
-          }
-        },
-        "description": "The quantity of Bitcoin to sell. Can either be a percentage, a value (number of bitcoins) or an amount (the value to sell given in another currency)."
+        ]
       },
       "SealedClassSellAmountRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/TransferType"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/Amount",
+            "description": "The amount to sell"
+          }
+        },
         "required": [
           "amount",
           "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/TransferType"
-          },
-          "amount": {
-            "$ref": "#/components/schemas/Amount"
-          }
-        }
+        ]
       },
       "SealedClassSellBitcoinRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/TransferType"
-          }
-        },
         "discriminator": {
           "propertyName": "type",
           "mapping": {
@@ -731,13 +968,17 @@
           {
             "$ref": "#/components/schemas/SealedClassSellAmountRequest"
           }
+        ],
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/TransferType"
+          }
+        },
+        "required": [
+          "type"
         ]
       },
       "SealedClassSellPercentageRequest": {
-        "required": [
-          "percentage",
-          "type"
-        ],
         "type": "object",
         "properties": {
           "type": {
@@ -748,13 +989,13 @@
             "description": "The percentage to sell",
             "example": 100
           }
-        }
+        },
+        "required": [
+          "percentage",
+          "type"
+        ]
       },
       "SealedClassSellValueRequest": {
-        "required": [
-          "type",
-          "value"
-        ],
         "type": "object",
         "properties": {
           "type": {
@@ -765,38 +1006,39 @@
             "description": "The value to sell",
             "example": 1.1
           }
-        }
+        },
+        "required": [
+          "type",
+          "value"
+        ]
       },
       "TransferType": {
         "type": "string",
         "description": "description",
-        "example": "PERCENTAGE",
         "enum": [
           "PERCENTAGE",
           "AMOUNT",
           "VALUE"
-        ]
+        ],
+        "example": "PERCENTAGE"
       },
       "SealedClassAmountResponse": {
-        "required": [
-          "amount",
-          "type"
-        ],
         "type": "object",
         "properties": {
           "type": {
             "$ref": "#/components/schemas/TransferType"
           },
           "amount": {
-            "$ref": "#/components/schemas/Amount"
+            "$ref": "#/components/schemas/Amount",
+            "description": "The amount to sell"
           }
-        }
+        },
+        "required": [
+          "amount",
+          "type"
+        ]
       },
       "SealedClassPercentageResponse": {
-        "required": [
-          "percentage",
-          "type"
-        ],
         "type": "object",
         "properties": {
           "type": {
@@ -807,18 +1049,14 @@
             "description": "The percentage to sell",
             "example": 100
           }
-        }
+        },
+        "required": [
+          "percentage",
+          "type"
+        ]
       },
       "SealedClassSellBitcoinResponse": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/TransferType"
-          }
-        },
         "discriminator": {
           "propertyName": "type",
           "mapping": {
@@ -837,13 +1075,17 @@
           {
             "$ref": "#/components/schemas/SealedClassValueResponse"
           }
+        ],
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/TransferType"
+          }
+        },
+        "required": [
+          "type"
         ]
       },
       "SealedClassValueResponse": {
-        "required": [
-          "type",
-          "value"
-        ],
         "type": "object",
         "properties": {
           "type": {
@@ -854,114 +1096,340 @@
             "description": "The value to sell",
             "example": 1.1
           }
-        }
-      },
-      "Analysis": {
+        },
         "required": [
-          "amount",
-          "description",
-          "isValuable",
-          "name"
-        ],
+          "type",
+          "value"
+        ]
+      },
+      "CorporateActionV2": {
         "type": "object",
         "properties": {
-          "name": {
+          "corporateActionId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "account": {
             "type": "string",
-            "description": "The name of the analysis",
-            "example": "Correctness analysis"
+            "example": "account-1"
           },
-          "description": {
-            "type": "string",
-            "description": "A description for the analysis",
-            "example": "The analysis describes whether you are correct or not"
-          },
-          "isValuable": {
-            "type": "boolean",
-            "description": "Whether the analysis is valuable"
-          },
-          "amount": {
-            "$ref": "#/components/schemas/Amount"
+          "decisionChoices": {
+            "$ref": "#/components/schemas/DecisionChoicesV2"
           }
-        }
-      },
-      "Child1": {
+        },
         "required": [
-          "child1Field",
-          "type"
-        ],
-        "type": "object",
-        "description": "Child 1",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Parent"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "example": "Child1"
-              },
-              "child1Field": {
-                "type": "string"
-              }
-            }
-          }
+          "account",
+          "corporateActionId"
         ]
       },
-      "Child2": {
-        "required": [
-          "child2Field",
-          "type"
-        ],
+      "DecisionChoicesV2": {
         "type": "object",
-        "description": "Child 2",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Parent"
+        "properties": {
+          "lastDecisionDate": {
+            "type": "string",
+            "format": "date"
           },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "example": "Child2"
+          "defaultOption": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ElectionOptionV2Cash"
               },
-              "child2Field": {
-                "type": "string"
+              {
+                "$ref": "#/components/schemas/ElectionOptionV2DoNotParticipate"
+              },
+              {
+                "$ref": "#/components/schemas/ElectionOptionV2Instrument"
               }
+            ]
+          },
+          "electionOptions": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ElectionOptionV2Cash"
+                },
+                {
+                  "$ref": "#/components/schemas/ElectionOptionV2DoNotParticipate"
+                },
+                {
+                  "$ref": "#/components/schemas/ElectionOptionV2Instrument"
+                }
+              ]
             }
           }
+        },
+        "required": [
+          "defaultOption",
+          "electionOptions",
+          "lastDecisionDate"
         ]
       },
-      "Parent": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
+      "ElectionOptionV2": {
+        "discriminator": {
+          "propertyName": "type"
+        },
         "properties": {
           "type": {
             "type": "string"
           }
         },
-        "discriminator": {
-          "propertyName": "type"
-        }
-      },
-      "Analyses": {
         "required": [
-          "analyses"
+          "type"
+        ]
+      },
+      "ElectionOptionV2Cash": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ElectionOptionV2"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "electionId": {
+                "type": "integer",
+                "format": "int32",
+                "example": 1
+              },
+              "cashAllocations": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Amount"
+                }
+              },
+              "type": {
+                "type": "string",
+                "example": "ElectionOptionV2Cash"
+              }
+            }
+          }
         ],
+        "required": [
+          "cashAllocations",
+          "electionId"
+        ]
+      },
+      "ElectionOptionV2DoNotParticipate": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ElectionOptionV2"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "electionId": {
+                "type": "integer",
+                "format": "int32",
+                "example": 1
+              },
+              "type": {
+                "type": "string",
+                "example": "ElectionOptionV2DoNotParticipate"
+              }
+            }
+          }
+        ],
+        "required": [
+          "electionId"
+        ]
+      },
+      "ElectionOptionV2Instrument": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ElectionOptionV2"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "electionId": {
+                "type": "integer",
+                "format": "int32",
+                "example": 1
+              },
+              "quantity": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "type": {
+                "type": "string",
+                "example": "ElectionOptionV2Instrument"
+              }
+            }
+          }
+        ],
+        "required": [
+          "electionId",
+          "quantity"
+        ]
+      },
+      "PaginatedCorporateActionsV2": {
         "type": "object",
         "properties": {
-          "analyses": {
+          "corporateActions": {
             "type": "array",
-            "description": "A list of analyses",
             "items": {
-              "$ref": "#/components/schemas/Analysis"
+              "$ref": "#/components/schemas/CorporateActionV2"
+            }
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          }
+        },
+        "required": [
+          "corporateActions",
+          "totalElements"
+        ]
+      },
+      "CorporateAction": {
+        "type": "object",
+        "properties": {
+          "corporateActionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "account": {
+            "type": "string"
+          },
+          "lastDecisionDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "hasElection": {
+            "type": "boolean"
+          },
+          "electionOptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ElectionOption"
             }
           }
         }
+      },
+      "ElectionOption": {
+        "type": "object",
+        "properties": {
+          "electionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isDefaultOption": {
+            "type": "boolean"
+          },
+          "isOversubscribe": {
+            "type": "boolean"
+          },
+          "doNotParticipate": {
+            "type": "boolean"
+          },
+          "cashActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Amount"
+            }
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "allowsOverSubscription": {
+            "type": "boolean"
+          },
+          "maximumOverSubScriptionPercentage": {
+            "type": "number"
+          },
+          "instrumentAllocations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstrumentAllocation"
+            }
+          }
+        }
+      },
+      "Instrument": {
+        "type": "object",
+        "properties": {
+          "isin": {
+            "type": "string"
+          }
+        }
+      },
+      "InstrumentAllocation": {
+        "type": "object",
+        "properties": {
+          "instrument": {
+            "$ref": "#/components/schemas/Instrument"
+          },
+          "price": {
+            "$ref": "#/components/schemas/Amount"
+          },
+          "sharesRatio": {
+            "$ref": "#/components/schemas/SharesRatio"
+          }
+        }
+      },
+      "PaginatedCorporateActions": {
+        "type": "object",
+        "properties": {
+          "corporateActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CorporateAction"
+            }
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Ratio": {
+        "type": "object",
+        "properties": {
+          "oldCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "newCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SharesRatio": {
+        "type": "object",
+        "properties": {
+          "newInstrument": {
+            "$ref": "#/components/schemas/Instrument"
+          },
+          "oldInstrument": {
+            "$ref": "#/components/schemas/Instrument"
+          },
+          "ratio": {
+            "$ref": "#/components/schemas/Ratio"
+          }
+        }
+      },
+      "Sort": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "type",
+            "writeOnly": true
+          },
+          "direction": {
+            "type": "string",
+            "example": "direction",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "direction",
+          "type"
+        ]
       }
     }
   }

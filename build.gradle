@@ -65,7 +65,7 @@ sourceSets.main {
 
 openApiGenerate {
     generatorName.set("java")
-    inputSpec.set("$rootDir/artifact/artifact.json")
+    inputSpec.set("$rootDir/artifact/artifact.json".replace("\\", "/"))
     outputDir.set(openApiGeneratedDir.toString())
     apiPackage.set("polymorphism.api")
     invokerPackage.set("polymorphism.invoker")

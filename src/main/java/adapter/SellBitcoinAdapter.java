@@ -43,10 +43,7 @@ public class SellBitcoinAdapter {
     }
 
     public Mono<SellInstrument> sellBitcoinExplicit(SellInstrument request) {
-        return jsonTypeRequestBodyApi.sellBitcoinExplicit(new JsonTypeRequestBodyApi.SellBitcoinExplicitRequest()
-                        .sellBitcoinExplicitRequestDTO(convertToExplicitRequest(request))
-                        .schema(List.of(new SortDTO().type("type").direction("direction"), new SortDTO().type("type").direction("direction")))
-                        .content(List.of(new SortDTO().type("type").direction("direction"), new SortDTO().type("type").direction("direction"))))
+        return jsonTypeRequestBodyApi.sellBitcoinExplicit(convertToExplicitRequest(request))
                 .map(this::convertResponse);
     }
 

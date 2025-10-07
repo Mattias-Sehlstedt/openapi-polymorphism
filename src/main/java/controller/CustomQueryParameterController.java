@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.Explode;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -38,7 +40,7 @@ public class CustomQueryParameterController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(description = "Sell your bitcoin", responses = {
             @ApiResponse(responseCode = "200")
-    })
+    }, extensions = @Extension(properties = @ExtensionProperty(name = "x-internal", value = "true")))
     @Parameter(name = "schema", in = ParameterIn.QUERY, explode = Explode.FALSE, array = @ArraySchema(schema = @Schema(implementation = Sort.class)))
     @Parameter(name = "list-of-objects", in = ParameterIn.QUERY, content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Sort.class))))
     @Parameter(name = "object-list", in = ParameterIn.QUERY, content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Sort.class))))
