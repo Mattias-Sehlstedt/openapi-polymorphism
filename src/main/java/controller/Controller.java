@@ -23,9 +23,8 @@ import api.model.jsonType.response.SealedInterfaceAmountResponse;
 import api.model.jsonType.response.SealedInterfacePercentageResponse;
 import api.model.jsonType.response.SealedInterfaceSellBitcoinResponse;
 import api.model.jsonType.response.SealedInterfaceValueResponse;
-import api.model.query.Sort;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import config.editors.SortEditor;
+import api.model.query.AccountIdentifier;
+import config.editors.AccountIdentifierEditor;
 import domain.service.DataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -48,6 +47,7 @@ import static api.RequestExamples.*;
 @RequestMapping(value = "/root", produces = "application/json")
 public class Controller {
 
+    private static final String ACCOUNT_IDENTIFIER_QUERY = "account-identifier";
     private static final String ENVIRONMENT_CLIENT = "client";
     private static final String ENVIRONMENT_SERVER = "server";
 
@@ -78,6 +78,7 @@ public class Controller {
             }
     )
     public Mono<SealedInterfaceSellBitcoinResponse> sellBitcoinExplicit(
+            @RequestParam(name = ACCOUNT_IDENTIFIER_QUERY) AccountIdentifier accountIdentifier,
             @RequestBody @Validated ExplicitTypeSellBitcoinRequest request) {
         if (environment.matchesProfiles(ENVIRONMENT_SERVER)) {
             return Mono.just(serverResponse(request));
@@ -110,6 +111,7 @@ public class Controller {
             }
     )
     public Mono<SealedInterfaceSellBitcoinResponse> sellBitcoinImplicit(
+            @RequestParam(name = ACCOUNT_IDENTIFIER_QUERY) AccountIdentifier accountIdentifier,
             @RequestBody @Validated ImplicitTypeSellBitcoinRequest request) {
         if (environment.matchesProfiles(ENVIRONMENT_SERVER)) {
             return Mono.just(serverResponse(request));
@@ -137,6 +139,7 @@ public class Controller {
             }
     )
     public Mono<SealedClassSellBitcoinResponse> sellBitcoinDiscriminated(
+            @RequestParam(name = ACCOUNT_IDENTIFIER_QUERY) AccountIdentifier accountIdentifier,
             @RequestBody @Validated SealedClassSellBitcoinRequest request) {
         if (environment.matchesProfiles(ENVIRONMENT_SERVER)) {
             return Mono.just(serverResponse(request));
@@ -174,7 +177,7 @@ public class Controller {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Sort.class, new SortEditor(new ObjectMapper()));
+        binder.registerCustomEditor(AccountIdentifier.class, new AccountIdentifierEditor());
     }
 
     private static SealedInterfaceSellBitcoinResponse serverResponse(ExplicitTypeSellBitcoinRequest request) {

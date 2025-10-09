@@ -24,7 +24,7 @@ public class SellBitcoinComponent {
         public SealedClassSellBitcoinRequest deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
             ObjectCodec codec = jsonParser.getCodec();
             JsonNode tree = codec.readTree(jsonParser);
-            TransferType transferType = TransferType.valueOf(tree.get("transferType").textValue());
+            TransferType transferType = TransferType.valueOf(tree.get("type").textValue());
             return switch (transferType) {
                 case PERCENTAGE -> new SealedClassSellPercentageRequest(tree.get("percentage").decimalValue());
                 case AMOUNT -> new SealedClassSellAmountRequest(
