@@ -2,6 +2,7 @@ package controller;
 
 import api.model.query.Sort;
 import api.model.query.SortList;
+import api.model.query.TwoPartAccountIdentifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import config.editors.SortEditor;
 import config.editors.SortListEditor;
@@ -44,10 +45,13 @@ public class CustomQueryParameterController {
     @Parameter(name = "schema", in = ParameterIn.QUERY, explode = Explode.FALSE, array = @ArraySchema(schema = @Schema(implementation = Sort.class)))
     @Parameter(name = "list-of-objects", in = ParameterIn.QUERY, content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Sort.class))))
     @Parameter(name = "object-list", in = ParameterIn.QUERY, content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Sort.class))))
+    @Parameter(name = "account-identifier", in = ParameterIn.QUERY, schema = @Schema(implementation = TwoPartAccountIdentifier.class))
     public Mono<Void> customQueryParameter(
             @RequestParam(name = "schema", required = false) List<String> schemaSort,
             @RequestParam(name = "list-of-objects", required = false) List<Sort> listOfObjects,
-            @RequestParam(name = "object-list", required = false) SortList objectList
+            @RequestParam(name = "object-list", required = false) SortList objectList,
+            @RequestParam(name = "accountNumber", required = false) @Schema(hidden = true) String accountNumber,
+            @RequestParam(name = "clearingNumber", required = false) @Schema(hidden = true) String clearingNumber
     ) {
         if (Objects.nonNull(objectList)) {
             objectList.sortList.forEach(System.out::println);
