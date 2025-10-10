@@ -17,3 +17,7 @@ This project also contain a test for upgrading the OpenAPI specification from 3.
 with using the @ArraySchema schema annotation, since  it works well for 3.0, but when switching over to 3.1 the "array" annotation
 would disappear in the specification. A solution for this seems to be to drop @ArraySchema entirely, and instead use only
 @Schema, since that annotation will still understand that it is an array without the explicit annotation.
+
+The best approach might be to attach the deserialization information to an interface, and then have a class
+with a @Schema annotation that implements the interface. This way we get both a nice Swagger-UI representation
+and the deserialization information?

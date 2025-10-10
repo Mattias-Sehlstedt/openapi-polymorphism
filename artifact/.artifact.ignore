@@ -41,3 +41,4 @@
 !**/src/main/java/polymorphism/model/SellBitcoinImplicit201ResponseDTO.java
 !**/src/main/java/polymorphism/model/TransferTypeDTO.java
 !**/src/main/java/polymorphism/model/SortDTO.java
+!**/src/main/java/polymorphism/model/TwoPartAccountIdentifierDTO.java

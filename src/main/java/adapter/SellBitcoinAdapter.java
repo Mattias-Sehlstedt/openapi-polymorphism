@@ -17,6 +17,7 @@ import java.util.List;
 public class SellBitcoinAdapter {
 
     private static final Instrument NO_INSTRUMENT = null;
+    private static final String ACCOUNT_ID = "accountId";
 
     private final FlatRequestBodyApi flatRequestBodyApi;
     private final JsonTypeRequestBodyApi jsonTypeRequestBodyApi;
@@ -43,17 +44,17 @@ public class SellBitcoinAdapter {
     }
 
     public Mono<SellInstrument> sellBitcoinExplicit(SellInstrument request) {
-        return jsonTypeRequestBodyApi.sellBitcoinExplicit(convertToExplicitRequest(request))
+        return jsonTypeRequestBodyApi.sellBitcoinExplicit(ACCOUNT_ID, convertToExplicitRequest(request))
                 .map(this::convertResponse);
     }
 
     public Mono<SellInstrument> sellBitcoinImplicit(SellInstrument request) {
-        return jsonTypeRequestBodyApi.sellBitcoinImplicit(convertToImplicitRequest(request))
+        return jsonTypeRequestBodyApi.sellBitcoinImplicit(ACCOUNT_ID, convertToImplicitRequest(request))
                 .map(this::convertResponse);
     }
 
     public Mono<SellInstrument> sellBitcoinDiscriminated(SellInstrument request) {
-        return discriminatedRequestBodyApi.sellBitcoinDiscriminated(convertToDiscriminatedRequest(request))
+        return discriminatedRequestBodyApi.sellBitcoinDiscriminated(ACCOUNT_ID, convertToDiscriminatedRequest(request))
                 .map(this::convertResponse);
     }
 

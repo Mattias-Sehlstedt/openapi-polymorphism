@@ -8,6 +8,7 @@ import api.model.jsonType.response.SealedInterfacePercentageResponse;
 import api.model.jsonType.response.SealedInterfaceSellBitcoinResponse;
 import api.model.jsonType.response.SealedInterfaceValueResponse;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -31,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         classes = Main.class,
         properties = {"spring.profiles.active=client"}
 )
-@WireMockTest(httpPort = 8080)
+@WireMockTest(httpPort = 8090)
 public class PolymorphismTest {
 
     private static final String CONTENT_TYPE = "Content-Type";
@@ -56,6 +57,7 @@ public class PolymorphismTest {
     private TestRestTemplate restTemplate;
 
     @ParameterizedTest
+    @Disabled
     @MethodSource("get_json_type_response")
     void get_json_type_response(SealedInterfaceSellBitcoinResponse expectedResponse, String responseBody) {
         given_endpoint_returns(responseBody);

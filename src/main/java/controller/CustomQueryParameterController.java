@@ -29,7 +29,7 @@ import java.util.Objects;
 
 @RestController
 @Validated
-@RequestMapping(value = "/root", produces = "application/json")
+@RequestMapping(value = "/root/query", produces = "application/json")
 public class CustomQueryParameterController {
 
     @Autowired

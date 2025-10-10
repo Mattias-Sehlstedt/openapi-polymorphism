@@ -99,6 +99,18 @@
         ],
         "description": "Sell your bitcoin",
         "operationId": "sellBitcoinImplicit",
+        "parameters": [
+          {
+            "name": "account-identifier",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "123-456789",
+              "pattern": "^\\d{3}-\\d{6}$"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -173,6 +185,18 @@
         ],
         "description": "Sell your bitcoin",
         "operationId": "sellBitcoinExplicit",
+        "parameters": [
+          {
+            "name": "account-identifier",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "123-456789",
+              "pattern": "^\\d{3}-\\d{6}$"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -304,6 +328,18 @@
         ],
         "description": "Sell your bitcoin",
         "operationId": "sellBitcoinDiscriminated",
+        "parameters": [
+          {
+            "name": "account-identifier",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "123-456789",
+              "pattern": "^\\d{3}-\\d{6}$"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -504,6 +540,13 @@
                   }
                 }
               }
+            }
+          },
+          {
+            "name": "account-identifier",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/TwoPartAccountIdentifier"
             }
           }
         ],
@@ -1429,6 +1472,26 @@
         "required": [
           "direction",
           "type"
+        ]
+      },
+      "TwoPartAccountIdentifier": {
+        "type": "object",
+        "properties": {
+          "clearingNumber": {
+            "type": "string",
+            "example": 123,
+            "pattern": "^\\d{3}$",
+            "x-clearing-number": true
+          },
+          "accountNumber": {
+            "type": "string",
+            "example": 456789,
+            "pattern": "^\\d{6}$"
+          }
+        },
+        "required": [
+          "accountNumber",
+          "clearingNumber"
         ]
       }
     }

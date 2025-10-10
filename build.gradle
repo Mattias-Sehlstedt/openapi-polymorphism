@@ -44,7 +44,7 @@ test {
     useJUnitPlatform()
 }
 
-var openApiGeneratedDir = "$rootDir/generated".toString()
+var openApiGeneratedDir = "$rootDir/build/generated".toString()
 var openApiGeneratedDirSrc = openApiGeneratedDir.concat("/src/main/java")
 
 tasks.named("bootJar") {
@@ -78,6 +78,7 @@ openApiGenerate {
             useSingleRequestParameter     : "static",
             additionalModelTypeAnnotations: "@lombok.experimental.SuperBuilder;@lombok.Data"
     ])
+    templateDir.set("$rootDir/artifact/templates/webclient")
     modelNameSuffix = "DTO"
     generateApiDocumentation.set(false)
     generateApiTests.set(false)
