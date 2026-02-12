@@ -47,10 +47,6 @@ test {
 var openApiGeneratedDir = "$rootDir/build/generated".toString()
 var openApiGeneratedDirSrc = openApiGeneratedDir.concat("/src/main/java")
 
-tasks.named("bootJar") {
-    mainClass = 'se.simplerobot.Main'
-}
-
 tasks.compileJava {
     dependsOn(tasks.openApiGenerate)
 }
