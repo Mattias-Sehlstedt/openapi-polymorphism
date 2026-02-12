@@ -68,9 +68,9 @@ public class Controller {
     @Tag(name = "Json-type request body")
     @PostMapping(value = "/json-type/explicit/sell-bitcoin")
     @ResponseStatus(HttpStatus.CREATED)
-    @Parameter(name = IDEMPOTENCY_HEADER, required = true, in = ParameterIn.HEADER, description = IDEMPOTENCY_DESCRIPTION)
-    @Parameter(name = TRACING_HEADER, required = true, in = ParameterIn.HEADER, description = TRACING_DESCRIPTION)
-    @Parameter(name = AUTH_HEADER, required = true, in = ParameterIn.HEADER, description = AUTH_DESCRIPTION)
+    @Parameter(name = IDEMPOTENCY_HEADER, required = true, in = ParameterIn.HEADER, description = IDEMPOTENCY_DESCRIPTION, schema = @Schema(implementation = String.class))
+    @Parameter(name = TRACING_HEADER, required = true, in = ParameterIn.HEADER, description = TRACING_DESCRIPTION, schema = @Schema(implementation = String.class))
+    @Parameter(name = AUTH_HEADER, required = true, in = ParameterIn.HEADER, description = AUTH_DESCRIPTION, schema = @Schema(implementation = String.class))
     @Operation(description = "Sell your bitcoin",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
@@ -100,9 +100,9 @@ public class Controller {
     @Tag(name = "Json-type request body")
     @PostMapping(value = "/json-type/implicit/sell-bitcoin")
     @ResponseStatus(HttpStatus.CREATED)
-    @Parameter(name = IDEMPOTENCY_HEADER, required = true, in = ParameterIn.HEADER, description = IDEMPOTENCY_DESCRIPTION)
-    @Parameter(name = TRACING_HEADER, required = true, in = ParameterIn.HEADER, description = TRACING_DESCRIPTION)
-    @Parameter(name = AUTH_HEADER, required = true, in = ParameterIn.HEADER, description = AUTH_DESCRIPTION)
+    @Parameter(name = IDEMPOTENCY_HEADER, required = true, in = ParameterIn.HEADER, description = IDEMPOTENCY_DESCRIPTION, schema = @Schema(implementation = String.class))
+    @Parameter(name = TRACING_HEADER, required = true, in = ParameterIn.HEADER, description = TRACING_DESCRIPTION, schema = @Schema(implementation = String.class))
+    @Parameter(name = AUTH_HEADER, required = true, in = ParameterIn.HEADER, description = AUTH_DESCRIPTION, schema = @Schema(implementation = String.class))
     @Operation(description = "Sell your bitcoin",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
@@ -137,9 +137,9 @@ public class Controller {
     @Tag(name = "Discriminated request body")
     @PostMapping(value = "/discriminated/sell-bitcoin")
     @ResponseStatus(HttpStatus.CREATED)
-    @Parameter(name = IDEMPOTENCY_HEADER, required = true, in = ParameterIn.HEADER, description = IDEMPOTENCY_DESCRIPTION)
-    @Parameter(name = TRACING_HEADER, required = true, in = ParameterIn.HEADER, description = TRACING_DESCRIPTION)
-    @Parameter(name = AUTH_HEADER, required = true, in = ParameterIn.HEADER, description = AUTH_DESCRIPTION)
+    @Parameter(name = IDEMPOTENCY_HEADER, required = true, in = ParameterIn.HEADER, description = IDEMPOTENCY_DESCRIPTION, schema = @Schema(implementation = String.class))
+    @Parameter(name = TRACING_HEADER, required = true, in = ParameterIn.HEADER, description = TRACING_DESCRIPTION, schema = @Schema(implementation = String.class))
+    @Parameter(name = AUTH_HEADER, required = true, in = ParameterIn.HEADER, description = AUTH_DESCRIPTION, schema = @Schema(implementation = String.class))
     @Operation(description = "Sell your bitcoin",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
@@ -170,9 +170,9 @@ public class Controller {
     @Tag(name = "Flat request body")
     @PostMapping(value = "/flattened/sell-bitcoin")
     @ResponseStatus(HttpStatus.CREATED)
-    @Parameter(name = IDEMPOTENCY_HEADER, required = true, in = ParameterIn.HEADER, description = IDEMPOTENCY_DESCRIPTION)
-    @Parameter(name = TRACING_HEADER, required = true, in = ParameterIn.HEADER, description = TRACING_DESCRIPTION)
-    @Parameter(name = AUTH_HEADER, required = true, in = ParameterIn.HEADER, description = AUTH_DESCRIPTION)
+    @Parameter(name = IDEMPOTENCY_HEADER, required = true, in = ParameterIn.HEADER, description = IDEMPOTENCY_DESCRIPTION, schema = @Schema(implementation = String.class))
+    @Parameter(name = TRACING_HEADER, required = true, in = ParameterIn.HEADER, description = TRACING_DESCRIPTION, schema = @Schema(implementation = String.class))
+    @Parameter(name = AUTH_HEADER, required = true, in = ParameterIn.HEADER, description = AUTH_DESCRIPTION, schema = @Schema(implementation = String.class))
     @Operation(description = "Sell your bitcoin",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(

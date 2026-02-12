@@ -42,3 +42,9 @@
 !**/src/main/java/polymorphism/model/TransferTypeDTO.java
 !**/src/main/java/polymorphism/model/SortDTO.java
 !**/src/main/java/polymorphism/model/TwoPartAccountIdentifierDTO.java
+!**/src/main/java/polymorphism/model/ApiConflictErrorDTO.java
+!**/src/main/java/polymorphism/model/TotallyADomainModelDTO.java
+!**/src/main/java/polymorphism/model/InternalDataDTO.java
+!**/src/main/java/polymorphism/model/InternalDataExceptionDTO.java
+!**/src/main/java/polymorphism/model/InternalDataExceptionCauseDTO.java
+!**/src/main/java/polymorphism/model/InternalDataExceptionCauseStackTraceInnerDTO.java

@@ -11,13 +11,15 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.Currency;
-import java.util.List;
 
 @Component
 public class SellBitcoinAdapter {
 
     private static final Instrument NO_INSTRUMENT = null;
     private static final String ACCOUNT_ID = "accountId";
+    private static final String IDEMPOTENCY = "idempotency";
+    private static final String TRACE = "trace";
+    private static final String AUTHENTICATION = "authentication";
 
     private final FlatRequestBodyApi flatRequestBodyApi;
     private final JsonTypeRequestBodyApi jsonTypeRequestBodyApi;
@@ -37,24 +39,25 @@ public class SellBitcoinAdapter {
             .value(BigDecimal.valueOf(10));
 
     public void sellBitcoin() {
-        flatRequestBodyApi.sellBitcoin(new SellBitcoinRequestDTO()
-                .percentage(BigDecimal.valueOf(10))
-                .value(BigDecimal.valueOf(10))
-                .amount(AMOUNT_DTO));
+        flatRequestBodyApi.sellBitcoin(new FlatRequestBodyApi.SellBitcoinRequest()
+                .sellBitcoinRequestDTO(new SellBitcoinRequestDTO()
+                        .percentage(BigDecimal.valueOf(10))
+                        .value(BigDecimal.valueOf(10))
+                        .amount(AMOUNT_DTO)));
     }
 
     public Mono<SellInstrument> sellBitcoinExplicit(SellInstrument request) {
-        return jsonTypeRequestBodyApi.sellBitcoinExplicit(ACCOUNT_ID, convertToExplicitRequest(request))
+        return jsonTypeRequestBodyApi.sellBitcoinExplicit(ACCOUNT_ID, IDEMPOTENCY, TRACE, AUTHENTICATION, convertToExplicitRequest(request))
                 .map(this::convertResponse);
     }
 
     public Mono<SellInstrument> sellBitcoinImplicit(SellInstrument request) {
-        return jsonTypeRequestBodyApi.sellBitcoinImplicit(ACCOUNT_ID, convertToImplicitRequest(request))
+        return jsonTypeRequestBodyApi.sellBitcoinImplicit(ACCOUNT_ID, IDEMPOTENCY, TRACE, AUTHENTICATION, convertToImplicitRequest(request))
                 .map(this::convertResponse);
     }
 
     public Mono<SellInstrument> sellBitcoinDiscriminated(SellInstrument request) {
-        return discriminatedRequestBodyApi.sellBitcoinDiscriminated(ACCOUNT_ID, convertToDiscriminatedRequest(request))
+        return discriminatedRequestBodyApi.sellBitcoinDiscriminated(ACCOUNT_ID, IDEMPOTENCY, TRACE, AUTHENTICATION, convertToDiscriminatedRequest(request))
                 .map(this::convertResponse);
     }
 
@@ -88,8 +91,7 @@ public class SellBitcoinAdapter {
                     .amount(convertModel(sellAmount.amount()));
             case SellPercentage sellPercentage ->
                     new ExplicitTypePercentageRequestDTO().percentage(sellPercentage.percentage().value());
-            case SellValue sellValue ->
-                    new ExplicitTypeValueRequestDTO().value(sellValue.shares().value());
+            case SellValue sellValue -> new ExplicitTypeValueRequestDTO().value(sellValue.shares().value());
         };
     }
 
@@ -99,8 +101,7 @@ public class SellBitcoinAdapter {
                     .amount(convertModel(sellAmount.amount()));
             case SellPercentage sellPercentage ->
                     new ImplicitTypePercentageRequestDTO().percentage(sellPercentage.percentage().value());
-            case SellValue sellValue ->
-                    new ImplicitTypeValueRequestDTO().value(sellValue.shares().value());
+            case SellValue sellValue -> new ImplicitTypeValueRequestDTO().value(sellValue.shares().value());
         };
     }
 
@@ -109,10 +110,9 @@ public class SellBitcoinAdapter {
             case SellAmount sellAmount -> new SealedClassSellAmountRequestDTO()
                     .type(TransferTypeDTO.AMOUNT)
                     .amount(convertModel(sellAmount.amount()));
-            case SellPercentage sellPercentage ->
-                    new SealedClassSellPercentageRequestDTO()
-                            .type(TransferTypeDTO.PERCENTAGE)
-                            .percentage(sellPercentage.percentage().value());
+            case SellPercentage sellPercentage -> new SealedClassSellPercentageRequestDTO()
+                    .type(TransferTypeDTO.PERCENTAGE)
+                    .percentage(sellPercentage.percentage().value());
             case SellValue sellValue -> new SealedClassSellValueRequestDTO()
                     .type(TransferTypeDTO.VALUE)
                     .value(sellValue.shares().value());
