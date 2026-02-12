@@ -7,8 +7,10 @@ import api.model.jsonType.response.SealedInterfaceAmountResponse;
 import api.model.jsonType.response.SealedInterfacePercentageResponse;
 import api.model.jsonType.response.SealedInterfaceSellBitcoinResponse;
 import api.model.jsonType.response.SealedInterfaceValueResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -25,6 +27,7 @@ import java.net.URI;
 import java.util.stream.Stream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(
@@ -32,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         classes = Main.class,
         properties = {"spring.profiles.active=client"}
 )
-@WireMockTest(httpPort = 8090)
+@WireMockTest(httpPort = 8080)
 public class PolymorphismTest {
 
     private static final String CONTENT_TYPE = "Content-Type";
@@ -57,7 +60,6 @@ public class PolymorphismTest {
     private TestRestTemplate restTemplate;
 
     @ParameterizedTest
-    @Disabled
     @MethodSource("get_json_type_response")
     void get_json_type_response(SealedInterfaceSellBitcoinResponse expectedResponse, String responseBody) {
         given_endpoint_returns(responseBody);
@@ -67,11 +69,27 @@ public class PolymorphismTest {
         assertEquals(expectedResponse, response);
     }
 
+    @ParameterizedTest
+    @MethodSource("get_json_type_response")
+    void test(SealedInterfaceSellBitcoinResponse expectedResponse, String responseBody) {
+        given_sell_bitcoin_returns(responseBody);
+
+        SealedInterfaceSellBitcoinResponse response = when_calling_endpoint();
+
+        assertEquals(expectedResponse, response);
+    }
+
     private void given_endpoint_returns(String responseBody) {
-        stubFor(post(urlMatching("/json-type/explicit/sell-bitcoin"))
+        stubFor(post(urlPathMatching("/root/json-type/explicit/sell-bitcoin"))
                 .willReturn(created().withHeader(CONTENT_TYPE, CONTENT_JSON)
                         .withBody(responseBody))
         );
+    }
+
+    private void given_sell_bitcoin_returns(String responseBody) {
+        stubFor(TestUtils.sellBitcoinReturns()
+                .willReturn(created().withHeader(CONTENT_TYPE, CONTENT_JSON)
+                        .withBody(responseBody)));
     }
 
     private SealedInterfaceSellBitcoinResponse when_calling_endpoint() {
@@ -79,7 +97,7 @@ public class PolymorphismTest {
                 new Amount(BigDecimal.valueOf(10), "SEK")
         );
         return restTemplate
-                .exchange(new RequestEntity<>(request, HttpMethod.POST, URI.create(BASE_PATH + port + "/json-type/explicit/sell-bitcoin")),
+                .exchange(new RequestEntity<>(request, HttpMethod.POST, URI.create(BASE_PATH + port + "/root/json-type/explicit/sell-bitcoin?account-identifier=123")),
                         SealedInterfaceSellBitcoinResponse.class)
                 .getBody();
     }
@@ -88,7 +106,7 @@ public class PolymorphismTest {
         return Stream.of(
                 Arguments.of(EXPECTED_AMOUNT_RESPONSE, """
                         {
-                            type: AMOUNT,
+                            "type" : "SealedInterfaceAmountResponse",
                             "amount" : {
                                 "value": 10,
                                 "currency" : "SEK"
@@ -96,12 +114,12 @@ public class PolymorphismTest {
                         }"""),
                 Arguments.of(EXPECTED_PERCENTAGE_RESPONSE, """
                         {
-                            type: PERCENTAGE,
+                            "type" : "SealedInterfacePercentageResponse",
                             "percentage" : 69
                         }"""),
                 Arguments.of(EXPECTED_VALUE_RESPONSE, """
                         {
-                            type: VALUE,
+                            "type" : "SealedInterfaceValueResponse",
                             "value" : 10
                         }""")
         );

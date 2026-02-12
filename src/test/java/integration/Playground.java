@@ -1,5 +1,10 @@
 package integration;
 
+import api.model.Amount;
+import api.model.jsonType.explicit.type.request.ExplicitTypeAmountRequest;
+import api.model.jsonType.explicit.type.request.ExplicitTypeSellBitcoinRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.core.converter.ResolvedSchema;
@@ -15,14 +20,9 @@ import polymorphism.model.ExplicitTypeAmountRequestDTO;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Playground {
-
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     @Test
     void test() {
@@ -30,6 +30,16 @@ public class Playground {
                 .resolveAsResolvedSchema(
                         new AnnotatedType(Parent.class).resolveAsRef(false));
         var test = "hej";
+    }
+
+    @Test
+    void serializationTest() throws JsonProcessingException {
+        ExplicitTypeSellBitcoinRequest request = new ExplicitTypeAmountRequest(
+                new Amount(BigDecimal.valueOf(10), "SEK")
+        );
+        ObjectMapper objectMapper = new ObjectMapper();
+        String object = objectMapper.writeValueAsString(request);
+        assertEquals("hej", object);
     }
 
     @Schema(
