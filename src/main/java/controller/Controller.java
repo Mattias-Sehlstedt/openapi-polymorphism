@@ -27,6 +27,9 @@ import api.model.query.AccountIdentifier;
 import config.editors.AccountIdentifierEditor;
 import domain.service.DataService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -41,6 +44,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import static api.RequestExamples.*;
+import static controller.model.corporate.actions.ControllerConstants.*;
 
 @RestController
 @Validated
@@ -63,6 +67,9 @@ public class Controller {
     @Tag(name = "Json-type request body")
     @PostMapping(value = "/json-type/explicit/sell-bitcoin")
     @ResponseStatus(HttpStatus.CREATED)
+    @Parameter(name = IDEMPOTENCY_HEADER, required = true, in = ParameterIn.HEADER, description = IDEMPOTENCY_DESCRIPTION)
+    @Parameter(name = TRACING_HEADER, required = true, in = ParameterIn.HEADER, description = TRACING_DESCRIPTION)
+    @Parameter(name = AUTH_HEADER, required = true, in = ParameterIn.HEADER, description = AUTH_DESCRIPTION)
     @Operation(description = "Sell your bitcoin",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
@@ -91,6 +98,9 @@ public class Controller {
     @Tag(name = "Json-type request body")
     @PostMapping(value = "/json-type/implicit/sell-bitcoin")
     @ResponseStatus(HttpStatus.CREATED)
+    @Parameter(name = IDEMPOTENCY_HEADER, required = true, in = ParameterIn.HEADER, description = IDEMPOTENCY_DESCRIPTION)
+    @Parameter(name = TRACING_HEADER, required = true, in = ParameterIn.HEADER, description = TRACING_DESCRIPTION)
+    @Parameter(name = AUTH_HEADER, required = true, in = ParameterIn.HEADER, description = AUTH_DESCRIPTION)
     @Operation(description = "Sell your bitcoin",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
@@ -124,6 +134,9 @@ public class Controller {
     @Tag(name = "Discriminated request body")
     @PostMapping(value = "/discriminated/sell-bitcoin")
     @ResponseStatus(HttpStatus.CREATED)
+    @Parameter(name = IDEMPOTENCY_HEADER, required = true, in = ParameterIn.HEADER, description = IDEMPOTENCY_DESCRIPTION)
+    @Parameter(name = TRACING_HEADER, required = true, in = ParameterIn.HEADER, description = TRACING_DESCRIPTION)
+    @Parameter(name = AUTH_HEADER, required = true, in = ParameterIn.HEADER, description = AUTH_DESCRIPTION)
     @Operation(description = "Sell your bitcoin",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
@@ -152,6 +165,9 @@ public class Controller {
     @Tag(name = "Flat request body")
     @PostMapping(value = "/flattened/sell-bitcoin")
     @ResponseStatus(HttpStatus.CREATED)
+    @Parameter(name = IDEMPOTENCY_HEADER, required = true, in = ParameterIn.HEADER, description = IDEMPOTENCY_DESCRIPTION)
+    @Parameter(name = TRACING_HEADER, required = true, in = ParameterIn.HEADER, description = TRACING_DESCRIPTION)
+    @Parameter(name = AUTH_HEADER, required = true, in = ParameterIn.HEADER, description = AUTH_DESCRIPTION)
     @Operation(description = "Sell your bitcoin",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
