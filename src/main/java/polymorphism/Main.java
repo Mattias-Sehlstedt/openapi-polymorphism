@@ -3,7 +3,7 @@ package polymorphism;
 import adapter.SellBitcoinAdapter;
 import config.SellBitcoinComponent;
 import config.resolvers.RequiredResolver;
-import controller.Controller;
+import api.controller.Controller;
 import domain.service.DataService;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.core.util.Json;
