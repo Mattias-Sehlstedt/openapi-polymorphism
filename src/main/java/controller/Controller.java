@@ -1,5 +1,6 @@
 package controller;
 
+import api.ApiConflictError;
 import api.converters.SellConverter;
 import api.model.SellBitcoinRequest;
 import api.model.SellBitcoinResponse;
@@ -81,7 +82,8 @@ public class Controller {
                     )
             ),
             responses = {
-                    @ApiResponse(responseCode = "201")
+                    @ApiResponse(responseCode = "201"),
+                    @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = ApiConflictError.class)))
             }
     )
     public Mono<SealedInterfaceSellBitcoinResponse> sellBitcoinExplicit(
@@ -117,7 +119,8 @@ public class Controller {
                     )
             ),
             responses = {
-                    @ApiResponse(responseCode = "201")
+                    @ApiResponse(responseCode = "201"),
+                    @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = ApiConflictError.class)))
             }
     )
     public Mono<SealedInterfaceSellBitcoinResponse> sellBitcoinImplicit(
@@ -148,7 +151,8 @@ public class Controller {
                     )
             ),
             responses = {
-                    @ApiResponse(responseCode = "201")
+                    @ApiResponse(responseCode = "201"),
+                    @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = ApiConflictError.class)))
             }
     )
     public Mono<SealedClassSellBitcoinResponse> sellBitcoinDiscriminated(
@@ -179,7 +183,8 @@ public class Controller {
                     )
             ),
             responses = {
-                    @ApiResponse(responseCode = "201")
+                    @ApiResponse(responseCode = "201"),
+                    @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = ApiConflictError.class)))
             }
     )
     public SellBitcoinResponse sellBitcoin(@RequestBody @Validated SellBitcoinRequest request) {
