@@ -26,6 +26,7 @@ import api.model.jsonType.response.SealedInterfaceSellBitcoinResponse;
 import api.model.jsonType.response.SealedInterfaceValueResponse;
 import api.model.query.AccountIdentifier;
 import config.editors.AccountIdentifierEditor;
+import domain.model.leakage.TotallyADomainModel;
 import domain.service.DataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -151,6 +152,7 @@ public class Controller {
             ),
             responses = {
                     @ApiResponse(responseCode = "201"),
+                    @ApiResponse(responseCode = "202", content = @Content(schema = @Schema(implementation = TotallyADomainModel.class))),
                     @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = ApiConflictError.class)))
             }
     )
