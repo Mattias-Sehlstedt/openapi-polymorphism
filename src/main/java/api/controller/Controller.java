@@ -27,7 +27,7 @@ import api.model.jsonType.response.SealedInterfaceValueResponse;
 import api.model.query.AccountIdentifier;
 import config.editors.AccountIdentifierEditor;
 import domain.model.leakage.TotallyADomainModel;
-import domain.service.DataService;
+import domain.service.BitcoinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -57,11 +57,11 @@ public class Controller {
     private static final String ENVIRONMENT_SERVER = "server";
 
     private final Environment environment;
-    private final DataService dataService;
+    private final BitcoinService bitcoinService;
 
     @Autowired
-    public Controller(DataService dataService, Environment environment) {
-        this.dataService = dataService;
+    public Controller(BitcoinService bitcoinService, Environment environment) {
+        this.bitcoinService = bitcoinService;
         this.environment = environment;
     }
 
@@ -92,7 +92,7 @@ public class Controller {
         if (environment.matchesProfiles(ENVIRONMENT_SERVER)) {
             return Mono.just(serverResponse(request));
         } else {
-            return dataService.sellInstrument(SellConverter.convertRequest(request))
+            return bitcoinService.sellInstrument(SellConverter.convertRequest(request))
                     .map(SellConverter::convertToSealedInterfaceResponse);
         }
     }
@@ -129,7 +129,7 @@ public class Controller {
         if (environment.matchesProfiles(ENVIRONMENT_SERVER)) {
             return Mono.just(serverResponse(request));
         } else {
-            return dataService.sellInstrument(SellConverter.convertRequest(request))
+            return bitcoinService.sellInstrument(SellConverter.convertRequest(request))
                     .map(SellConverter::convertToSealedInterfaceResponse);
         }
     }
@@ -162,7 +162,7 @@ public class Controller {
         if (environment.matchesProfiles(ENVIRONMENT_SERVER)) {
             return Mono.just(serverResponse(request));
         } else {
-            return dataService.sellInstrument(SellConverter.convertRequest(request))
+            return bitcoinService.sellInstrument(SellConverter.convertRequest(request))
                     .map(SellConverter::convertToSealedClassResponse);
         }
     }
