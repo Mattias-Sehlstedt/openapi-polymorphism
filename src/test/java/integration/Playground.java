@@ -39,7 +39,7 @@ public class Playground {
         );
         ObjectMapper objectMapper = new ObjectMapper();
         String object = objectMapper.writeValueAsString(request);
-        assertEquals("hej", object);
+        assertEquals("{\"type\":\"AMOUNT\",\"amount\":{\"value\":10,\"currency\":\"SEK\"}}", object);
     }
 
     @Schema(

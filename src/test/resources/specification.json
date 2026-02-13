@@ -581,6 +581,68 @@
           }
         }
       }
+    },
+    "/root/query/sort-with-custom-query-parameter" : {
+      "get" : {
+        "tags" : [ "Sort with Json-query parameter" ],
+        "description" : "Sell your bitcoin",
+        "operationId" : "customQueryParameter",
+        "parameters" : [ {
+          "name" : "schema",
+          "in" : "query",
+          "required" : false,
+          "explode" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Sort"
+            }
+          }
+        }, {
+          "name" : "list-of-objects",
+          "in" : "query",
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/Sort"
+                }
+              }
+            }
+          }
+        }, {
+          "name" : "object-list",
+          "in" : "query",
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/Sort"
+                }
+              }
+            }
+          }
+        }, {
+          "name" : "account-identifier",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/TwoPartAccountIdentifier"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "201" : {
+            "description" : "Created"
+          }
+        },
+        "x-internal" : "true"
+      }
     }
   },
   "components" : {
@@ -1487,6 +1549,39 @@
             "$ref" : "#/components/schemas/Ratio"
           }
         }
+      },
+      "Sort" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "example" : "type",
+            "writeOnly" : true
+          },
+          "direction" : {
+            "type" : "string",
+            "example" : "direction",
+            "writeOnly" : true
+          }
+        },
+        "required" : [ "direction", "type" ]
+      },
+      "TwoPartAccountIdentifier" : {
+        "type" : "object",
+        "properties" : {
+          "clearingNumber" : {
+            "type" : "string",
+            "example" : 123,
+            "pattern" : "^\\d{3}$",
+            "x-clearing-number" : true
+          },
+          "accountNumber" : {
+            "type" : "string",
+            "example" : 456789,
+            "pattern" : "^\\d{6}$"
+          }
+        },
+        "required" : [ "accountNumber", "clearingNumber" ]
       }
     }
   }
